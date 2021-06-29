@@ -1,0 +1,10 @@
+.idea/
+node_modules/
+build/
+tmp/
+temp/
+dist/
+Dockerfile
+docker-compose.yml
+.env
+package-lock.json
