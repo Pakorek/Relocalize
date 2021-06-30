@@ -40,8 +40,6 @@ export class Service extends BaseEntity {
   @ManyToOne(() => Shop, (shop) => shop.services)
   shop!: Shop;
 
-  // ref, price, categorie_id
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 

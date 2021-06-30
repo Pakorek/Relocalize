@@ -7,10 +7,12 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn, OneToMany,
 } from 'typeorm';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
+import { Product } from './Product';
+import { Shop } from './Shop';
 
 export type ROLE = 'ANON' | 'CLIENT' | 'PROFESSIONAL';
 
@@ -48,6 +50,9 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 11 })
   @IsNotEmpty({ message: 'The role is required' })
   role!: ROLE;
+
+  @OneToMany(() => Shop, (shop) => shop.owner)
+  shops?: Shop[];
 
   @OneToOne(() => ContactInformation)
   @JoinColumn()
