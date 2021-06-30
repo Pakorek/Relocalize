@@ -18,19 +18,19 @@ export class ContactInformation extends BaseEntity {
   @Column({ type: 'varchar', length: 35 })
   @IsAlphanumeric()
   @IsNotEmpty()
-  adress_1!: string;
+  address_1!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
   @IsAlphanumeric()
   @IsOptional()
-  adress_2!: string;
+  address_2?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
   @IsAlphanumeric()
   @IsOptional()
-  adress_3!: string;
+  address_3?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })

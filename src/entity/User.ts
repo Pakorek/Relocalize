@@ -9,7 +9,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn, OneToMany,
 } from 'typeorm';
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Product } from './Product';
 import { Shop } from './Shop';
@@ -24,6 +24,11 @@ export class User extends BaseEntity {
   id!: number;
 
   @Field()
+  @Column({ default: false })
+  @IsBoolean()
+  validated!: boolean; // true if rcs
+
+  @Field()
   @Column({ unique: true, type: 'varchar', length: 50 })
   @IsEmail({}, { message: 'Incorrect email' })
   email!: string;
@@ -34,7 +39,7 @@ export class User extends BaseEntity {
     message:
       'The password must be at least 6 but not longer than 30 characters',
   })
-  password!: string;
+  password?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
