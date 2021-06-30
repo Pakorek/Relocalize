@@ -9,12 +9,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {
-  IsAlpha,
-  IsAlphanumeric,
-  IsNotEmpty,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 
 export type BILLING_PLAN = 'FREE' | 'COMMISSION'
