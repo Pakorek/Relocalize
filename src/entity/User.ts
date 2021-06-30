@@ -51,7 +51,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => ContactInformation)
   @JoinColumn()
-  contact_informations!: ContactInformation;
+  contact_information!: ContactInformation;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
