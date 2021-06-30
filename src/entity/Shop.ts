@@ -7,11 +7,13 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn, OneToMany,
 } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Schedules } from './Schedules';
+import { Product } from './Product';
+import { Service } from './Service';
 
 export type BILLING_PLAN = 'FREE' | 'COMMISSION'
 export type PROFESSIONAL_AREA =
@@ -54,6 +56,12 @@ export class Shop extends BaseEntity {
   @Field()
   @Column({ type: 'number' })
   longitude?: number;
+
+  @OneToMany(() => Product, (product) => product.shop)
+  products!: Product[];
+
+  @OneToMany(() => Service, (service) => service.shop)
+  services!: Service[]
 
   @OneToOne(() => ContactInformation)
   @JoinColumn()
