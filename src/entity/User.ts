@@ -39,7 +39,7 @@ export class User extends BaseEntity {
     message:
       'The password must be at least 6 but not longer than 30 characters',
   })
-  password?: string;
+  password!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
