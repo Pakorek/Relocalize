@@ -9,12 +9,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn, OneToMany,
 } from 'typeorm';
-import { IsBoolean, IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Product } from './Product';
 import { Shop } from './Shop';
 
-export type ROLE = 'ANON' | 'CLIENT' | 'PROFESSIONAL';
+export type ROLE = 'CLIENT' | 'PROFESSIONAL';
 
 @ObjectType('User')
 @InputType('UserInput')
@@ -52,9 +52,9 @@ export class User extends BaseEntity {
   lastName!: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 11 })
-  @IsNotEmpty({ message: 'The role is required' })
-  role!: ROLE;
+  @Column({ type: 'varchar', length: 11, default: 'CLIENT' })
+  @IsOptional()
+  role?: ROLE;
 
   @OneToMany(() => Shop, (shop) => shop.owner)
   shops?: Shop[];

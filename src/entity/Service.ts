@@ -24,7 +24,7 @@ export class Service extends BaseEntity {
   name!: string;
 
   @Field()
-  @Column({ type: 'number' })
+  @Column({ type: 'int' })
   @IsNumber()
   @IsNotEmpty({ message: 'The price is required' })
   price!: number;

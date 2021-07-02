@@ -44,7 +44,7 @@ export class Shop extends BaseEntity {
   typeOf!: PROFESSIONAL_AREA;
 
   @Field()
-  @Column({ unique: true, type: 'number' })
+  @Column({ unique: true, type: 'int' })
   rcs?: number;
 
   @Field()
@@ -52,11 +52,11 @@ export class Shop extends BaseEntity {
   billing_plan?: BILLING_PLAN;
 
   @Field()
-  @Column({ type: 'number' })
+  @Column({ type: 'float' })
   latitude?: number;
 
   @Field()
-  @Column({ type: 'number' })
+  @Column({ type: 'float' })
   longitude?: number;
 
   @OneToMany(() => Product, (product) => product.shop)

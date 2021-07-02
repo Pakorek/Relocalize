@@ -8,6 +8,15 @@ import cookieParser = require('cookie-parser');
 import dotenv from 'dotenv';
 import { UserResolver } from './resolver/User';
 import { passwordAuthChecker } from './utils/auth-checker';
+import { User } from './entity/User';
+import { Shop } from './entity/Shop';
+import { Product } from './entity/Product';
+import { Service } from './entity/Service';
+import { ContactInformation } from './entity/ContactInformation';
+import { Category } from './entity/Category';
+import { Schedules } from './entity/Schedules';
+import { AuthResult } from './entity/AuthResult';
+
 dotenv.config();
 
 const startServer = async () => {
@@ -18,7 +27,7 @@ const startServer = async () => {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: 'relocalize',
-    entities: [],
+    entities: [User, Shop, Product, Service, ContactInformation, Category, Schedules, AuthResult],
     synchronize: true,
     migrations: ['migration/*.ts'],
     cli: {
