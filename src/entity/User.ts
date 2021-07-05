@@ -53,8 +53,7 @@ export class User extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 11, default: 'CLIENT' })
-  @IsOptional()
-  role?: ROLE;
+  role!: ROLE;
 
   @OneToMany(() => Shop, (shop) => shop.owner)
   shops?: Shop[];

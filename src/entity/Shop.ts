@@ -9,7 +9,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn, OneToMany, ManyToOne,
 } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
+import { IsAlpha, IsAlphanumeric, IsNotEmpty, IsOptional } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Schedules } from './Schedules';
 import { Product } from './Product';
@@ -41,36 +41,37 @@ export class Shop extends BaseEntity {
   @Field()
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty({ message: 'The professional area is required' })
-  typeOf!: PROFESSIONAL_AREA;
-
-  @Field()
-  @Column({ unique: true, type: 'int' })
-  rcs?: number;
+  professionalArea!: string; // ex: Restaurateur
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
+  @IsNotEmpty({ message: 'The professional class is required' })
+  professionalClass!: string; // ex: Service des traiteurs
+
+  @Field()
+  @Column({ unique: true, type: 'varchar' })
+  siret!: string;
+
+  @Field()
+  @Column({ type: 'float' })
+  latitude!: number;
+
+  @Field()
+  @Column({ type: 'float' })
+  longitude!: number;
+
+  @ManyToOne(() => User, (user) => user.shops)
+  owner!: User;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: 'FREE' })
   billing_plan?: BILLING_PLAN;
-
-  @Field()
-  @Column({ type: 'float' })
-  latitude?: number;
-
-  @Field()
-  @Column({ type: 'float' })
-  longitude?: number;
 
   @OneToMany(() => Product, (product) => product.shop)
   products?: Product[];
 
   @OneToMany(() => Service, (service) => service.shop)
   services?: Service[]
-
-  @ManyToOne(() => User, (user) => user.shops)
-  owner?: User;
-
-  @OneToOne(() => ContactInformation)
-  @JoinColumn()
-  contact_information!: ContactInformation;
 
   @OneToOne(() => Schedules)
   @JoinColumn()
@@ -81,4 +82,43 @@ export class Shop extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
+
+  // @OneToOne(() => ContactInformation)
+  // @JoinColumn()
+  // contact_information!: ContactInformation;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35 })
+  @IsNotEmpty()
+  address_1!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35, nullable: true })
+  @IsOptional()
+  address_2?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35, nullable: true })
+  @IsOptional()
+  address_3?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35 })
+  @IsNotEmpty()
+  city!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 6 })
+  @IsNotEmpty()
+  zipCode!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35 })
+  @IsNotEmpty()
+  department!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 70 })
+  @IsNotEmpty()
+  country!: string;
 }

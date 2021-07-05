@@ -12,11 +12,13 @@ export class ShopResolver {
 
 
   @Mutation(() => Shop)
+  @Authorized()
   public async createShop(
-    @Arg('values', () => Shop) values: Shop
+    @Arg('values', () => Shop) values: Shop,
+    @Ctx() ctx
   ): Promise<Shop | void> {
-    // get userId
-    const shop = this.shopRepo.create({ ...values });
+    console.log('ctx.user', ctx)
+    const shop = this.shopRepo.create({ ...values, owner: ctx.user.id });
 
     return await this.shopRepo
       .save(shop)

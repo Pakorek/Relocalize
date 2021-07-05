@@ -25,6 +25,7 @@ export const passwordAuthChecker: AuthChecker = async (
       const connectedUser = await manager.findOneOrFail(User, {
         id: +userID,
       });
+      console.log('connectedUser', connectedUser)
       // const { id, email, role } = connectedUser;
       context.user = connectedUser;
 
