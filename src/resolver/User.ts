@@ -41,8 +41,8 @@ export class UserResolver {
         userId: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
+        lastName: user.lastName
+        // role: user.role,
       });
 
       return { token, user };

@@ -16,6 +16,7 @@ import { ContactInformation } from './entity/ContactInformation';
 import { Category } from './entity/Category';
 import { Schedules } from './entity/Schedules';
 import { AuthResult } from './entity/AuthResult';
+import { ShopResolver } from './resolver/Shop';
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ const startServer = async () => {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, ShopResolver],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,
   });

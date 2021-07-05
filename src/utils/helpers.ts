@@ -9,7 +9,7 @@ export type dataType = {
   email: string;
   firstName: string;
   lastName: string;
-  role: string;
+  // role: string;
 };
 
 export function generateJwt(data: dataType): string {
@@ -22,6 +22,7 @@ export function generateJwt(data: dataType): string {
 export function decodeJwt(token: string): dataType | string {
   const decoded = jwt.verify(token, JWT_SECRET);
   if (typeof decoded === 'string') return decoded;
-  const { userId, email, firstName, lastName, role } = decoded as dataType;
-  return { userId, email, firstName, lastName, role };
+  // const { userId, email, firstName, lastName, role } = decoded as dataType;
+  const { userId, email, firstName, lastName } = decoded as dataType;
+  return { userId, email, firstName, lastName };
 }
