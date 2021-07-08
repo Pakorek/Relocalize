@@ -9,7 +9,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn, OneToMany, ManyToOne,
 } from 'typeorm';
-import { IsAlpha, IsAlphanumeric, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsAlpha, IsAlphanumeric, IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Schedules } from './Schedules';
 import { Product } from './Product';
@@ -34,9 +34,22 @@ export class Shop extends BaseEntity {
   id!: number;
 
   @Field()
+  @Column({ type: 'bool', default: false })
+  @IsBoolean()
+  validated?: boolean;
+
+  @Field()
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty({ message: 'The name is required' })
   name!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  website?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  phone?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
@@ -44,13 +57,17 @@ export class Shop extends BaseEntity {
   professionalArea!: string; // ex: Restaurateur
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
-  @IsNotEmpty({ message: 'The professional class is required' })
-  professionalClass!: string; // ex: Service des traiteurs
+  @Column({ type: 'varchar', length: 255, default: '' })
+  // @IsNotEmpty({ message: 'The professional class is required' })
+  professionalClass?: string; // ex: Service des traiteurs
 
   @Field()
-  @Column({ unique: true, type: 'varchar' })
-  siret!: string;
+  @Column({ type: 'varchar', default: '' })
+  siret?: string;
+
+  @Field()
+  @Column({ type: 'varchar', default: '' })
+  shortDescription?: string;
 
   @Field()
   @Column({ type: 'float' })
@@ -61,7 +78,10 @@ export class Shop extends BaseEntity {
   longitude!: number;
 
   @ManyToOne(() => User, (user) => user.shops)
-  owner!: User;
+  owner?: User;
+
+  @ManyToOne(() => User, (user) => user.contributions)
+  contributor?: User;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: 'FREE' })
@@ -118,7 +138,7 @@ export class Shop extends BaseEntity {
   department!: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 70 })
+  @Column({ type: 'varchar', length: 70, default: 'France' })
   @IsNotEmpty()
-  country!: string;
+  country?: string;
 }

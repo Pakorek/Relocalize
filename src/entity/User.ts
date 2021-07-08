@@ -13,6 +13,7 @@ import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Length } from 'class-valida
 import { ContactInformation } from './ContactInformation';
 import { Product } from './Product';
 import { Shop } from './Shop';
+import { Image } from './Image';
 
 export type ROLE = 'CLIENT' | 'PROFESSIONAL';
 
@@ -57,6 +58,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Shop, (shop) => shop.owner)
   shops?: Shop[];
+
+  @OneToMany(() => Shop, (shop) => shop.contributor)
+  contributions?: Shop[];
+
+  @OneToMany(() => Image, (image) => image.user)
+  images?: Image[];
 
   @OneToOne(() => ContactInformation)
   @JoinColumn()

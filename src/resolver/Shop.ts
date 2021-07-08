@@ -13,7 +13,7 @@ export class ShopResolver {
 
   @Mutation(() => Shop)
   @Authorized()
-  public async createShop(
+  public async createOwnerShop(
     @Arg('values', () => Shop) values: Shop,
     @Ctx() ctx
   ): Promise<Shop | void> {
@@ -26,6 +26,40 @@ export class ShopResolver {
   }
 
   @Mutation(() => Shop)
+  @Authorized()
+  public async createContributionShop(
+    @Arg('values', () => Shop) values: Shop,
+    @Ctx() ctx
+  ): Promise<Shop | void> {
+    const shop = this.shopRepo.create({ ...values, contributor: ctx.user.id });
+
+    // const shop = await this.shopRepo.save(newShop);
+    // // now we can assign shop.id to other elements
+    // shop.schedules?.map(async (s: any) => {
+    //
+    // })
+    // console.log('resolver shop', shop)
+
+    return await this.shopRepo
+      .save(shop)
+      .catch((err) => console.log('save shop error', err));
+  }
+
+  @Query(() => [Shop])
+  public async getShops(
+    @Arg('country') country: string,
+  ): Promise<Shop[] | void> {
+    const shops = await this.shopRepo.find({ country: country});
+
+    if (!shops) {
+      throw new Error('Any shops founded, sorry !');
+    }
+    return shops;
+  }
+
+
+  @Mutation(() => Shop)
+  @Authorized()
   public async updateShop(
     @Arg('id') id: number,
     @Arg('values') values: Shop
