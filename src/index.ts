@@ -17,6 +17,9 @@ import { Category } from './entity/Category';
 import { Schedules } from './entity/Schedules';
 import { AuthResult } from './entity/AuthResult';
 import { ShopResolver } from './resolver/Shop';
+import {graphqlUploadExpress} from "graphql-upload";
+import { FileUploadResolver } from './resolver/FileUpload';
+import { Upload } from './entity/Upload';
 
 dotenv.config();
 
@@ -28,7 +31,7 @@ const startServer = async () => {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: 'relocalize',
-    entities: [User, Shop, Product, Service, ContactInformation, Category, Schedules, AuthResult],
+    entities: [User, Shop, Product, Service, ContactInformation, Category, Schedules, AuthResult, Upload],
     synchronize: true,
     migrations: ['migration/*.ts'],
     cli: {
@@ -37,7 +40,7 @@ const startServer = async () => {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, ShopResolver],
+    resolvers: [UserResolver, ShopResolver, FileUploadResolver],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,
   });
@@ -47,9 +50,10 @@ const startServer = async () => {
   app.use(cookieParser());
   const server = new ApolloServer({
     schema,
+    uploads: false,
     context: ({ req, res }) => ({ req, res }),
   });
-
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
   server.applyMiddleware({ app });
 
   app.listen(4300, () => {

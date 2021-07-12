@@ -17,16 +17,14 @@ export class UserResolver {
   @Query(() => User)
   @Authorized()
   public async authenticatedUser(@Ctx() ctx): Promise<User> {
-    console.log();
     return ctx.user;
   }
 
-  // @Query(() => User)
-  //@Authorized()
-  // public async getUser(@Ctx() ctx): Promise<User> {
-  //     console.log(ctx.user)
-  //     return ctx.user;
-  // }
+  @Query(() => User)
+  @Authorized()
+  public async getUser(@Ctx() ctx): Promise<User> {
+      return ctx.user;
+  }
 
   @Mutation(() => AuthResult, { nullable: true })
   public async authenticate(
