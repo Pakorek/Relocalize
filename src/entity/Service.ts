@@ -5,11 +5,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn, ManyToOne,
+  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Category } from './Category';
-import { Shop } from './Shop';
+import { Place } from './Place';
 
 @ObjectType('Service')
 @InputType('ServiceInput')
@@ -37,8 +38,8 @@ export class Service extends BaseEntity {
   @ManyToOne(() => Category, (category) => category.services)
   category!: Category;
 
-  @ManyToOne(() => Shop, (shop) => shop.services)
-  shop!: Shop;
+  @ManyToOne(() => Place, (place) => place.services)
+  place!: Place;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;

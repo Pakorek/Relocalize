@@ -8,7 +8,7 @@ import {
   UpdateDateColumn
 } from 'typeorm';
 import { IsAlpha, IsAlphanumeric, IsNotEmpty, IsOptional } from 'class-validator';
-import { PROFESSIONAL_AREA } from './Shop';
+import { PROFESSIONAL_AREA } from './Place';
 
 
 @ObjectType('Prospect')

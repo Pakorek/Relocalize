@@ -37,10 +37,10 @@ export class Upload extends BaseEntity {
 
   createReadStream!: () => ReadStream;
 
-  @CreateDateColumn({type: "timestamp"})
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 
-  @UpdateDateColumn({type: "timestamp"})
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 
   @ManyToOne(() => User, (user) => user.uploads)

@@ -1,13 +1,6 @@
 import { Field, InputType, ObjectType } from 'type-graphql';
-import {
-  Entity,
-  BaseEntity,
-  Column,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import {
-  IsDate,
-} from 'class-validator';
+import { Entity, BaseEntity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { IsDate } from 'class-validator';
 
 @ObjectType('Schedules')
 @InputType('SchedulesInput')

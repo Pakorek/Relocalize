@@ -3,7 +3,8 @@ import {
   Entity,
   BaseEntity,
   Column,
-  PrimaryGeneratedColumn, OneToMany,
+  PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { Product } from './Product';
@@ -25,5 +26,5 @@ export class Category extends BaseEntity {
   products?: Product[];
 
   @OneToMany(() => Service, (service) => service.category)
-  services?: Service[]
+  services?: Service[];
 }

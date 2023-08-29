@@ -9,15 +9,15 @@ import dotenv from 'dotenv';
 import { UserResolver } from './resolver/User';
 import { passwordAuthChecker } from './utils/auth-checker';
 import { User } from './entity/User';
-import { Shop } from './entity/Shop';
+import { Place } from './entity/Place';
 import { Product } from './entity/Product';
 import { Service } from './entity/Service';
 import { ContactInformation } from './entity/ContactInformation';
 import { Category } from './entity/Category';
 import { Schedules } from './entity/Schedules';
 import { AuthResult } from './entity/AuthResult';
-import { ShopResolver } from './resolver/Shop';
-import {graphqlUploadExpress} from "graphql-upload";
+import { PlaceResolver } from './resolver/Place';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { FileUploadResolver } from './resolver/FileUpload';
 import { Upload } from './entity/Upload';
 
@@ -25,13 +25,23 @@ dotenv.config();
 
 const startServer = async () => {
   await createConnection({
-    type: 'mysql',
+    type: 'postgres',
     host: process.env.DB_HOST,
-    port: 3306,
+    port: 5432,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: 'relocalize',
-    entities: [User, Shop, Product, Service, ContactInformation, Category, Schedules, AuthResult, Upload],
+    entities: [
+      User,
+      Place,
+      Product,
+      Service,
+      ContactInformation,
+      Category,
+      Schedules,
+      AuthResult,
+      Upload,
+    ],
     synchronize: true,
     migrations: ['migration/*.ts'],
     cli: {
@@ -40,7 +50,7 @@ const startServer = async () => {
   });
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, ShopResolver, FileUploadResolver],
+    resolvers: [UserResolver, PlaceResolver, FileUploadResolver],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,
   });

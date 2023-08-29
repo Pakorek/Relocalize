@@ -1,4 +1,4 @@
-import { Authorized, Field, InputType, ObjectType } from 'type-graphql';
+import { Field, InputType, ObjectType } from 'type-graphql';
 import {
   Entity,
   BaseEntity,
@@ -7,12 +7,12 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn, OneToMany,
+  UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
-import { Product } from './Product';
-import { Shop } from './Shop';
+import { Place } from './Place';
 import { Upload } from './Upload';
 
 export type ROLE = 'CLIENT' | 'PROFESSIONAL';
@@ -50,21 +50,23 @@ export class User extends BaseEntity {
   @Field()
   @Column({ type: 'varchar', length: 35 })
   @IsNotEmpty({ message: 'The lastname is required' })
-  lastName!: string
+  lastName!: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 255, default: "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    default:
+      'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y',
+  })
   avatar?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 11, default: 'CLIENT' })
   role!: ROLE;
 
-  @OneToMany(() => Shop, (shop) => shop.owner)
-  shops?: Shop[];
-
-  @OneToMany(() => Shop, (shop) => shop.contributor)
-  contributions?: Shop[];
+  @OneToMany(() => Place, (place) => place.owner)
+  places?: Place[];
 
   @OneToMany(() => Upload, (upload) => upload.user)
   uploads?: Upload[];

@@ -7,29 +7,28 @@ import {
   OneToOne,
   JoinColumn,
   CreateDateColumn,
-  UpdateDateColumn, OneToMany, ManyToOne,
+  UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { IsAlpha, IsAlphanumeric, IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
-import { ContactInformation } from './ContactInformation';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { Schedules } from './Schedules';
 import { Product } from './Product';
 import { Service } from './Service';
-import { Category } from './Category';
 import { User } from './User';
 
-export type BILLING_PLAN = 'FREE' | 'COMMISSION'
+export type BILLING_PLAN = 'FREE' | 'COMMISSION';
 export type PROFESSIONAL_AREA =
   | 'ARTISAN'
   | 'FARMER'
   | 'MERCHANT'
   | 'SERVICE PROVIDER'
-  | '...'
+  | '...';
 
-
-@ObjectType('Shop')
-@InputType('ShopInput')
+@ObjectType('Place')
+@InputType('PlaceInput')
 @Entity()
-export class Shop extends BaseEntity {
+export class Place extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -77,21 +76,18 @@ export class Shop extends BaseEntity {
   @Column({ type: 'float' })
   longitude!: number;
 
-  @ManyToOne(() => User, (user) => user.shops)
+  @ManyToOne(() => User, (user) => user.places)
   owner?: User;
-
-  @ManyToOne(() => User, (user) => user.contributions)
-  contributor?: User;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: 'FREE' })
   billing_plan?: BILLING_PLAN;
 
-  @OneToMany(() => Product, (product) => product.shop)
+  @OneToMany(() => Product, (product) => product.place)
   products?: Product[];
 
-  @OneToMany(() => Service, (service) => service.shop)
-  services?: Service[]
+  @OneToMany(() => Service, (service) => service.place)
+  services?: Service[];
 
   @OneToOne(() => Schedules)
   @JoinColumn()
