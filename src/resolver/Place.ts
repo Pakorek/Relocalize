@@ -8,7 +8,7 @@ export class PlaceResolver {
 
   @Mutation(() => Place)
   @Authorized()
-  public async createOwnerPlace(
+  public async createPlace(
     @Arg('values', () => Place) values: Place,
     @Ctx() ctx
   ): Promise<Place | void> {
