@@ -11,15 +11,13 @@ import { passwordAuthChecker } from './utils/auth-checker';
 import { User } from './entity/User';
 import { Place } from './entity/Place';
 import { Product } from './entity/Product';
-import { Service } from './entity/Service';
-import { ContactInformation } from './entity/ContactInformation';
 import { Category } from './entity/Category';
-import { Schedules } from './entity/Schedules';
 import { AuthResult } from './entity/AuthResult';
 import { PlaceResolver } from './resolver/Place';
 import { graphqlUploadExpress } from 'graphql-upload';
 import { FileUploadResolver } from './resolver/FileUpload';
 import { Upload } from './entity/Upload';
+import { Tag } from './entity/Tag';
 
 dotenv.config();
 
@@ -30,19 +28,9 @@ const startServer = async () => {
     port: 5432,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: 'relocalize',
-    entities: [
-      User,
-      Place,
-      Product,
-      Service,
-      ContactInformation,
-      Category,
-      Schedules,
-      AuthResult,
-      Upload,
-    ],
-    synchronize: true,
+    database: 'agora',
+    entities: [User, Place, Product, Category, Tag, AuthResult, Upload],
+    synchronize: false,
     migrations: ['migration/*.ts'],
     cli: {
       migrationsDir: 'migration',

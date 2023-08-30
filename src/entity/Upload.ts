@@ -5,11 +5,14 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn, ManyToOne,
+  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { IsUrl } from 'class-validator';
 import { User } from './User';
 import { ReadStream } from 'fs';
+import { Place } from './Place';
+import { Product } from './Product';
 
 @ObjectType('Image')
 @InputType('ImageInput')
@@ -45,4 +48,10 @@ export class Upload extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.uploads)
   user?: User;
+
+  @ManyToOne(() => Place, (place) => place.uploads)
+  place?: Place;
+
+  @ManyToOne(() => Product, (product) => product.uploads)
+  product?: Product;
 }

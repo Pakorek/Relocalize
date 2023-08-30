@@ -7,10 +7,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-} from 'typeorm';
+  ManyToMany,
+  JoinTable, OneToMany
+} from "typeorm";
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Category } from './Category';
 import { Place } from './Place';
+import { Tag } from './Tag';
+import { Upload } from "./Upload";
 
 @ObjectType('Product')
 @InputType('ProductInput')
@@ -40,6 +44,13 @@ export class Product extends BaseEntity {
 
   @ManyToOne(() => Place, (place) => place.products)
   place!: Place;
+
+  @ManyToMany(() => Tag, (tag) => tag.places)
+  @JoinTable({ name: 'product_has_tags' })
+  tags?: Tag[];
+
+  @OneToMany(() => Upload, (upload) => upload.product)
+  uploads?: Upload[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;

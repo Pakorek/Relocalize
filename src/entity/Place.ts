@@ -4,20 +4,21 @@ import {
   BaseEntity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
-import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
-import { Schedules } from './Schedules';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
-import { Service } from './Service';
 import { User } from './User';
+import { Category } from './Category';
+import { Upload } from './Upload';
+import { Tag } from './Tag';
 
-export type BILLING_PLAN = 'FREE' | 'COMMISSION';
+// export type BILLING_PLAN = 'FREE' | 'COMMISSION';
 export type PROFESSIONAL_AREA =
   | 'ARTISAN'
   | 'FARMER'
@@ -33,14 +34,51 @@ export class Place extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column({ type: 'bool', default: false })
-  @IsBoolean()
-  validated?: boolean;
-
-  @Field()
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty({ message: 'The name is required' })
   name!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 35 })
+  @IsNotEmpty({ message: 'The name is required' })
+  type!: string;
+
+  @Field()
+  @Column({ type: 'text' })
+  description?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 4 })
+  @IsNotEmpty({ message: 'The name is required' })
+  since!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  facebook?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  instagram?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  whatsapp?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  linkedin?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  twitter?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  pinterest?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  tiktok?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })
@@ -48,60 +86,11 @@ export class Place extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })
-  phone?: string;
-
-  @Field()
-  @Column({ type: 'varchar', length: 255 })
-  @IsNotEmpty({ message: 'The professional area is required' })
-  professionalArea!: string; // ex: Restaurateur
+  otherSocialLabel?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })
-  // @IsNotEmpty({ message: 'The professional class is required' })
-  professionalClass?: string; // ex: Service des traiteurs
-
-  @Field()
-  @Column({ type: 'varchar', default: '' })
-  siret?: string;
-
-  @Field()
-  @Column({ type: 'varchar', default: '' })
-  shortDescription?: string;
-
-  @Field()
-  @Column({ type: 'float' })
-  latitude!: number;
-
-  @Field()
-  @Column({ type: 'float' })
-  longitude!: number;
-
-  @ManyToOne(() => User, (user) => user.places)
-  owner?: User;
-
-  @Field()
-  @Column({ type: 'varchar', length: 255, default: 'FREE' })
-  billing_plan?: BILLING_PLAN;
-
-  @OneToMany(() => Product, (product) => product.place)
-  products?: Product[];
-
-  @OneToMany(() => Service, (service) => service.place)
-  services?: Service[];
-
-  @OneToOne(() => Schedules)
-  @JoinColumn()
-  schedules?: Schedules;
-
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
-
-  // @OneToOne(() => ContactInformation)
-  // @JoinColumn()
-  // contact_information!: ContactInformation;
+  otherSocialLink?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
@@ -137,4 +126,62 @@ export class Place extends BaseEntity {
   @Column({ type: 'varchar', length: 70, default: 'France' })
   @IsNotEmpty()
   country?: string;
+
+  @Field()
+  @Column({ type: 'float' })
+  lat!: number;
+
+  @Field()
+  @Column({ type: 'float' })
+  lng!: number;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  phone?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255, default: '' })
+  phone_2?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 66 })
+  rna?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 14 })
+  siret?: string;
+
+  @ManyToOne(() => User, (user) => user.places)
+  @IsNotEmpty()
+  owner!: User;
+
+  @OneToMany(() => Product, (product) => product.place)
+  products?: Product[];
+
+  @ManyToOne(() => Category, (category) => category.places)
+  category?: Category;
+
+  @ManyToMany(() => Tag, (tag) => tag.places)
+  @JoinTable({ name: 'place_has_tags' })
+  tags?: Tag[];
+
+  @OneToMany(() => Upload, (upload) => upload.place)
+  uploads?: Upload[];
+
+  // @OneToMany(() => Service, (service) => service.place)
+  // services?: Service[];
+
+  // @OneToOne(() => Schedules)
+  // @JoinColumn()
+  // schedules?: Schedules;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt!: Date;
+
+  // @OneToOne(() => ContactInformation)
+  // @JoinColumn()
+  // contact_information!: ContactInformation;
 }
