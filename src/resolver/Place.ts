@@ -1,19 +1,22 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { getRepository } from 'typeorm';
 import { Place } from '../entity/Place';
+import { dataSource } from '../data-source';
+import { User } from "../entity/User";
+
 
 @Resolver(Place)
 export class PlaceResolver {
-  private placeRepo = getRepository(Place);
+  private placeRepo = dataSource.getRepository(Place);
 
   @Mutation(() => Place)
-  @Authorized()
+  // @Authorized()
   public async createPlace(
     @Arg('values', () => Place) values: Place,
     @Ctx() ctx
   ): Promise<Place | void> {
-    console.log('ctx.user', ctx);
-    const place = this.placeRepo.create({ ...values, owner: ctx.user.id });
+    // const place = this.placeRepo.create({ ...values, owner: ctx.user.id });
+    const place = this.placeRepo.create({ ...values });
 
     return await this.placeRepo
       .save(place)
@@ -21,10 +24,9 @@ export class PlaceResolver {
   }
 
   @Query(() => [Place])
-  public async getPlaces(
-    @Arg('country') country: string
-  ): Promise<Place[] | void> {
-    const places = await this.placeRepo.find({ country: country });
+  public async getPlaces(): Promise<Place[] | void> {
+    // const places = await this.placeRepo.find({ relations: { owner: true } });
+    const places = await this.placeRepo.find();
 
     if (!places) {
       throw new Error('Any places founded, sorry !');
@@ -39,7 +41,7 @@ export class PlaceResolver {
     @Arg('values') values: Place
     // @Ctx() ctx
   ): Promise<Place> {
-    const place: Place | undefined = await this.placeRepo.findOne({
+    const place: Place | null = await this.placeRepo.findOne({
       where: { id: id },
     });
 

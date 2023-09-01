@@ -1,11 +1,11 @@
 {
-  "type": "mysql",
+  "type": "postgres",
   "host": "localhost",
-  "port": 3306,
-  "username": "pako",
-  "password": "rek",
-  "database": "relocalize",
-  "synchronize": true,
+  "port": 5432,
+  "username": "numik",
+  "password": "studio",
+  "database": "agora",
+  "synchronize": false,
   "logging": false,
   "entities": [
     "dist/**/*.entity.js"

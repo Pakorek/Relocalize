@@ -25,45 +25,40 @@ export class User extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column({ default: false })
-  @IsBoolean()
-  validated!: boolean; // true if rcs
-
-  @Field()
   @Column({ unique: true, type: 'varchar', length: 50 })
   @IsEmail({}, { message: 'Incorrect email' })
   email!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255 })
-  @Length(6, 30, {
-    message:
-      'The password must be at least 6 but not longer than 30 characters',
-  })
   password!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
   @IsNotEmpty({ message: 'The firstname is required' })
-  firstName!: string;
+  first_name!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
   @IsNotEmpty({ message: 'The lastname is required' })
-  lastName!: string;
+  last_name!: string;
 
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 255,
-    default:
-      'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y',
-  })
-  avatar?: string;
+  @Column({ type: 'varchar', length: 35 })
+  pseudo?: string;
+
+  // @Field()
+  // @Column({
+  //   type: 'varchar',
+  //   length: 255,
+  //   default:
+  //     'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y',
+  // })
+  // avatar?: string;
 
   @Field()
-  @Column({ type: 'varchar', length: 11, default: 'CLIENT' })
-  role!: ROLE;
+  @Column({ type: 'json' })
+  roles!: string;
 
   @OneToMany(() => Place, (place) => place.owner)
   places?: Place[];
@@ -71,13 +66,13 @@ export class User extends BaseEntity {
   @OneToMany(() => Upload, (upload) => upload.user)
   uploads?: Upload[];
 
-  @OneToOne(() => ContactInformation)
-  @JoinColumn()
-  contact_information!: ContactInformation;
+  // @OneToOne(() => ContactInformation)
+  // @JoinColumn()
+  // contact_information!: ContactInformation;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  updated_at!: Date;
 }

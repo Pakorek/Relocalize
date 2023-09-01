@@ -35,6 +35,6 @@ export class Category extends BaseEntity {
   @OneToMany(() => Product, (product) => product.category)
   products?: Product[];
 
-  @OneToMany(() => Service, (service) => service.category)
-  services?: Service[];
+  // @OneToMany(() => Service, (service) => service.category)
+  // services?: Service[];
 }

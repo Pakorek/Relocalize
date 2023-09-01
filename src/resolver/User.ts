@@ -4,10 +4,11 @@ import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
 import { generateJwt } from '../utils/helpers';
 import { getRepository } from 'typeorm';
+import { dataSource } from '../data-source';
 
 @Resolver(User)
 export class UserResolver {
-  private userRepo = getRepository(User);
+  private userRepo = dataSource.getRepository(User);
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
@@ -23,31 +24,31 @@ export class UserResolver {
   @Query(() => User)
   @Authorized()
   public async getUser(@Ctx() ctx): Promise<User> {
-      return ctx.user;
+    return ctx.user;
   }
 
-  @Mutation(() => AuthResult, { nullable: true })
-  public async authenticate(
-    @Arg('email') email: string,
-    @Arg('password') password: string
-    // @Ctx() ctx
-  ): Promise<AuthResult> {
-    const user = await this.userRepo.findOneOrFail({ email });
-
-    if (user && (await bcrypt.compare(password, user.password)) === true) {
-      const token = generateJwt({
-        userId: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName
-        // role: user.role,
-      });
-
-      return { token, user };
-    } else {
-      return {};
-    }
-  }
+  // @Mutation(() => AuthResult, { nullable: true })
+  // public async authenticate(
+  //   @Arg('email') email: string,
+  //   @Arg('password') password: string
+  //   // @Ctx() ctx
+  // ): Promise<AuthResult> {
+  //   const user = await this.userRepo.findOneOrFail({ email });
+  //
+  //   if (user && (await bcrypt.compare(password, user.password)) === true) {
+  //     const token = generateJwt({
+  //       userId: user.id,
+  //       email: user.email,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName
+  //       // role: user.role,
+  //     });
+  //
+  //     return { token, user };
+  //   } else {
+  //     return {};
+  //   }
+  // }
 
   @Mutation(() => User)
   public async createUser(
@@ -67,7 +68,7 @@ export class UserResolver {
     @Arg('values') values: User
     // @Ctx() ctx
   ): Promise<User> {
-    const user: User | undefined = await this.userRepo.findOne({
+    const user: User | null = await this.userRepo.findOne({
       where: { id: id },
     });
 
@@ -97,5 +98,14 @@ export class UserResolver {
     } catch (err) {
       throw new Error('you are not allowed to delete this user');
     }
+  }
+
+  @Query(() => [User])
+  public async getUsers(): Promise<User[]> {
+    return await this.userRepo.find({
+      order: {
+        email: 'ASC',
+      },
+    });
   }
 }

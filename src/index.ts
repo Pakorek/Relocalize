@@ -1,42 +1,16 @@
 import 'reflect-metadata';
-import { createConnection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server-express';
 import Express from 'express';
 import cors = require('cors');
 import cookieParser = require('cookie-parser');
-import dotenv from 'dotenv';
 import { UserResolver } from './resolver/User';
 import { passwordAuthChecker } from './utils/auth-checker';
-import { User } from './entity/User';
-import { Place } from './entity/Place';
-import { Product } from './entity/Product';
-import { Category } from './entity/Category';
-import { AuthResult } from './entity/AuthResult';
 import { PlaceResolver } from './resolver/Place';
-import { graphqlUploadExpress } from 'graphql-upload';
+import graphqlUploadExpress from 'graphql-upload';
 import { FileUploadResolver } from './resolver/FileUpload';
-import { Upload } from './entity/Upload';
-import { Tag } from './entity/Tag';
-
-dotenv.config();
 
 const startServer = async () => {
-  await createConnection({
-    type: 'postgres',
-    host: process.env.DB_HOST,
-    port: 5432,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: 'agora',
-    entities: [User, Place, Product, Category, Tag, AuthResult, Upload],
-    synchronize: false,
-    migrations: ['migration/*.ts'],
-    cli: {
-      migrationsDir: 'migration',
-    },
-  });
-
   const schema = await buildSchema({
     resolvers: [UserResolver, PlaceResolver, FileUploadResolver],
     authChecker: passwordAuthChecker,
@@ -51,7 +25,7 @@ const startServer = async () => {
     uploads: false,
     context: ({ req, res }) => ({ req, res }),
   });
-  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+  // app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
   server.applyMiddleware({ app });
 
   app.listen(4300, () => {

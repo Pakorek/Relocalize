@@ -86,11 +86,11 @@ export class Place extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })
-  otherSocialLabel?: string;
+  other_social_label?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })
-  otherSocialLink?: string;
+  other_social_link?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 35 })
@@ -115,12 +115,7 @@ export class Place extends BaseEntity {
   @Field()
   @Column({ type: 'varchar', length: 6 })
   @IsNotEmpty()
-  zipCode!: string;
-
-  @Field()
-  @Column({ type: 'varchar', length: 35 })
-  @IsNotEmpty()
-  department!: string;
+  zip_code!: string;
 
   @Field()
   @Column({ type: 'varchar', length: 70, default: 'France' })
@@ -151,15 +146,24 @@ export class Place extends BaseEntity {
   @Column({ type: 'varchar', length: 14 })
   siret?: string;
 
-  @ManyToOne(() => User, (user) => user.places)
-  @IsNotEmpty()
-  owner!: User;
+  @Field()
+  @Column({ type: 'int' })
+  owner_id!: number;
+
+  @Field()
+  @Column({ type: 'int' })
+  category_id!: number;
+
+  // @ManyToOne(() => User, (user) => user.places)
+  // @Field()
+  // @IsNotEmpty()
+  // owner!: number;
+
+  // @ManyToOne(() => Category, (category) => category.places)
+  // category?: Category;
 
   @OneToMany(() => Product, (product) => product.place)
   products?: Product[];
-
-  @ManyToOne(() => Category, (category) => category.places)
-  category?: Category;
 
   @ManyToMany(() => Tag, (tag) => tag.places)
   @JoinTable({ name: 'place_has_tags' })
@@ -176,10 +180,10 @@ export class Place extends BaseEntity {
   // schedules?: Schedules;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  updated_at!: Date;
 
   // @OneToOne(() => ContactInformation)
   // @JoinColumn()

@@ -1,10 +1,10 @@
-import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
-import { GraphQLUpload } from 'graphql-upload';
-import cloudinary from 'cloudinary';
-import { Upload } from '../entity/Upload';
-import dotenv from 'dotenv';
-import { getRepository } from 'typeorm';
-import { User } from '../entity/User';
+import { Resolver, Mutation, Arg, Ctx, Authorized } from "type-graphql";
+import GraphQLUpload from "graphql-upload";
+import cloudinary from "cloudinary";
+import { Upload } from "../entity/Upload";
+import dotenv from "dotenv";
+import { getRepository } from "typeorm";
+import { User } from "../entity/User";
 
 dotenv.config();
 
@@ -32,27 +32,26 @@ export type FileType = {
 
 @Resolver(Upload)
 export class FileUploadResolver {
-
   private userRepo = getRepository(User);
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async uploadFile(
-    @Arg('file', () => GraphQLUpload) file: Upload,
-    @Ctx() ctx
-    ): Promise<boolean> {
-    // check MIME ( here ? )
-    return new Promise(async (resolve, reject) => {
-      const uploadedFile: string = await uploadFile(file);
-      console.log('uploadedFile', uploadedFile);
-      if (uploadedFile) {
-        // link to user
-        console.log('context', ctx.user)
-        await this.userRepo.update(ctx.user.id, {avatar: uploadedFile})
-      }
-      resolve(true);
-    });
-  }
+  // @Authorized()
+  // @Mutation(() => Boolean)
+  // async uploadFile(
+  //   @Arg("file", () => GraphQLUpload) file: Upload,
+  //   @Ctx() ctx
+  // ): Promise<boolean> {
+  //   // check MIME ( here ? )
+  //   return new Promise(async (resolve, reject) => {
+  //     const uploadedFile: string = await uploadFile(file);
+  //     console.log("uploadedFile", uploadedFile);
+  //     if (uploadedFile) {
+  //       // link to user
+  //       console.log("context", ctx.user);
+  //       await this.userRepo.update(ctx.user.id, { avatar: uploadedFile });
+  //     }
+  //     resolve(true);
+  //   });
+  // }
 }
 
 const uploadFile = async (file): Promise<string> => {
@@ -63,7 +62,7 @@ const uploadFile = async (file): Promise<string> => {
   cloudinary.v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
+    api_secret: process.env.API_SECRET
   });
 
   return new Promise((resolve, reject) => {
