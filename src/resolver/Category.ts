@@ -2,6 +2,11 @@ import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { dataSource } from '../data-source';
 import { Category } from '../entity/Category';
 
+type groupedCategories = {
+  label: string;
+  childs: Category[];
+};
+
 @Resolver(Category)
 export class CategoryResolver {
   private categoryRepo = dataSource.getRepository(Category);
@@ -12,7 +17,6 @@ export class CategoryResolver {
     @Arg('values', () => Category) values: Category,
     @Ctx() ctx
   ): Promise<Category | void> {
-    // const place = this.categoryRepo.create({ ...values, owner: ctx.user.id });
     const category = this.categoryRepo.create({ ...values });
 
     return await this.categoryRepo
@@ -21,15 +25,55 @@ export class CategoryResolver {
   }
 
   @Query(() => [Category])
-  public async getCategories(): Promise<Category[] | void> {
-    // const places = await this.categoryRepo.find({ relations: { owner: true } });
+  public async getProCategories(): Promise<groupedCategories[] | void> {
     const categories = await this.categoryRepo.find({
       relations: { parent: true },
+      where: { place_type: 'PROFESSIONAL' },
+      order: {
+        parent: {
+          label: 'ASC',
+        },
+        label: 'ASC',
+      },
     });
 
     if (!categories) {
-      throw new Error('Any categories founded, sorry !');
+      throw new Error('Any category founded, sorry !');
     }
+
+    const groupedData = {};
+    categories.forEach((item: Category) => {
+      const parent = item.parent;
+      if (parent) {
+        if (!groupedData[parent.label]) {
+          groupedData[parent.label] = {
+            label: parent.label,
+            childs: [],
+          };
+        }
+        groupedData[parent.label].childs.push({
+          id: item.id,
+          label: item.label,
+        });
+      }
+    });
+
+    return Object.values(groupedData);
+  }
+
+  @Query(() => [Category])
+  public async getAssoCategories(): Promise<Category[] | void> {
+    const categories = await this.categoryRepo.find({
+      where: { place_type: 'ASSOCIATION' },
+      order: {
+        label: 'ASC',
+      },
+    });
+
+    if (!categories) {
+      throw new Error('Any category founded, sorry !');
+    }
+
     return categories;
   }
 
@@ -38,7 +82,6 @@ export class CategoryResolver {
   public async updateCategory(
     @Arg('id') id: number,
     @Arg('values') values: Category
-    // @Ctx() ctx
   ): Promise<Category> {
     const category: Category | null = await this.categoryRepo.findOne({
       where: { id: id },

@@ -24,6 +24,10 @@ export class Category extends BaseEntity {
   @IsNotEmpty({ message: 'The label is required' })
   label!: string;
 
+  @Field()
+  @Column()
+  place_type?: string;
+
   @Column()
   parent_id?: number;
 
@@ -33,6 +37,7 @@ export class Category extends BaseEntity {
   parent?: Category | null;
 
   @OneToMany(() => Category, (category) => category.parent)
+  @Field(() => [Category])
   childs?: Category[] | null;
 
   @OneToMany(() => Place, (place) => place.category)
