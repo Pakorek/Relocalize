@@ -25,7 +25,7 @@ export class PlaceResolver {
   @Query(() => [Place])
   public async getPlaces(): Promise<Place[] | void> {
     const places = await this.placeRepo.find({
-      relations: { owner: true, category: true },
+      relations: { owner: true, category: true, tags: true },
     });
     // const places = await this.placeRepo.find();
 

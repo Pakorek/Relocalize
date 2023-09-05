@@ -9,8 +9,9 @@ import {
   OneToMany,
   ManyToOne,
   ManyToMany,
-  JoinTable, JoinColumn
-} from "typeorm";
+  JoinTable,
+  JoinColumn,
+} from 'typeorm';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
 import { User } from './User';
@@ -167,7 +168,18 @@ export class Place extends BaseEntity {
   products?: Product[];
 
   @ManyToMany(() => Tag, (tag) => tag.places)
-  @JoinTable({ name: 'place_has_tags' })
+  @JoinTable({
+    name: 'place_has_tags',
+    joinColumn: {
+      name: 'place_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
+    },
+  })
+  @Field(() => [Tag])
   tags?: Tag[];
 
   @OneToMany(() => Upload, (upload) => upload.place)
