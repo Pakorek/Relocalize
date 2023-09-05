@@ -9,6 +9,7 @@ import { passwordAuthChecker } from './utils/auth-checker';
 import { PlaceResolver } from './resolver/Place';
 import { FileUploadResolver } from './resolver/FileUpload';
 import { CategoryResolver } from './resolver/Category';
+import { TagResolver } from './resolver/Tag';
 
 const startServer = async () => {
   const schema = await buildSchema({
@@ -17,6 +18,7 @@ const startServer = async () => {
       PlaceResolver,
       FileUploadResolver,
       CategoryResolver,
+      TagResolver,
     ],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,

@@ -27,28 +27,30 @@ export class UserResolver {
     return ctx.user;
   }
 
-  // @Mutation(() => AuthResult, { nullable: true })
-  // public async authenticate(
-  //   @Arg('email') email: string,
-  //   @Arg('password') password: string
-  //   // @Ctx() ctx
-  // ): Promise<AuthResult> {
-  //   const user = await this.userRepo.findOneOrFail({ email });
-  //
-  //   if (user && (await bcrypt.compare(password, user.password)) === true) {
-  //     const token = generateJwt({
-  //       userId: user.id,
-  //       email: user.email,
-  //       firstName: user.firstName,
-  //       lastName: user.lastName
-  //       // role: user.role,
-  //     });
-  //
-  //     return { token, user };
-  //   } else {
-  //     return {};
-  //   }
-  // }
+  @Mutation(() => AuthResult, { nullable: true })
+  public async authenticate(
+    @Arg('email') email: string,
+    @Arg('password') password: string
+    // @Ctx() ctx
+  ): Promise<AuthResult> {
+    const user = await this.userRepo.findOneOrFail({
+      where: { email },
+    });
+
+    if (user && (await bcrypt.compare(password, user.password)) === true) {
+      const token = generateJwt({
+        userId: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        // role: user.role,
+      });
+
+      return { token, user };
+    } else {
+      return {};
+    }
+  }
 
   @Mutation(() => User)
   public async createUser(
@@ -56,6 +58,9 @@ export class UserResolver {
   ): Promise<User | void> {
     const hash = await UserResolver.hashPassword(values.password);
     const user = this.userRepo.create({ ...values, password: hash });
+
+    // TODO : on dev, need use object with spread operator then stringify
+    user.roles = JSON.stringify(['ROLE_USER']);
 
     return await this.userRepo
       .save(user)
