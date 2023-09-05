@@ -4,7 +4,7 @@ import {
   BaseEntity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany, ManyToOne
+  OneToMany, ManyToOne, JoinColumn
 } from "typeorm";
 import { IsNotEmpty } from 'class-validator';
 import { Product } from './Product';
@@ -16,6 +16,7 @@ import { Place } from './Place';
 @Entity()
 export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
+  @Field()
   id!: number;
 
   @Field()
@@ -23,7 +24,12 @@ export class Category extends BaseEntity {
   @IsNotEmpty({ message: 'The label is required' })
   label!: string;
 
+  @Column()
+  parent_id?: number;
+
   @ManyToOne(() => Category, (category) => category.childs)
+  @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
+  @Field(() => Category)
   parent?: Category | null;
 
   @OneToMany(() => Category, (category) => category.parent)

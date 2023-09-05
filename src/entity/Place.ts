@@ -9,8 +9,8 @@ import {
   OneToMany,
   ManyToOne,
   ManyToMany,
-  JoinTable,
-} from 'typeorm';
+  JoinTable, JoinColumn
+} from "typeorm";
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
 import { User } from './User';
@@ -146,21 +146,22 @@ export class Place extends BaseEntity {
   @Column({ type: 'varchar', length: 14 })
   siret?: string;
 
-  @Field()
   @Column({ type: 'int' })
   owner_id!: number;
 
-  @Field()
   @Column({ type: 'int' })
   category_id!: number;
 
-  // @ManyToOne(() => User, (user) => user.places)
-  // @Field()
-  // @IsNotEmpty()
-  // owner!: number;
+  @ManyToOne(() => User, (user) => user.places)
+  @JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
+  @Field(() => User)
+  @IsNotEmpty()
+  owner!: User;
 
-  // @ManyToOne(() => Category, (category) => category.places)
-  // category?: Category;
+  @ManyToOne(() => Category, (category) => category.places)
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
+  @Field(() => Category)
+  category?: Category;
 
   @OneToMany(() => Product, (product) => product.place)
   products?: Product[];

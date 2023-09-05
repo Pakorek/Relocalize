@@ -1,5 +1,4 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { getRepository } from 'typeorm';
 import { Place } from '../entity/Place';
 import { dataSource } from '../data-source';
 import { User } from "../entity/User";
@@ -25,8 +24,10 @@ export class PlaceResolver {
 
   @Query(() => [Place])
   public async getPlaces(): Promise<Place[] | void> {
-    // const places = await this.placeRepo.find({ relations: { owner: true } });
-    const places = await this.placeRepo.find();
+    const places = await this.placeRepo.find({
+      relations: { owner: true, category: true },
+    });
+    // const places = await this.placeRepo.find();
 
     if (!places) {
       throw new Error('Any places founded, sorry !');

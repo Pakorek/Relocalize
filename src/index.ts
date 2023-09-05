@@ -7,12 +7,17 @@ import cookieParser = require('cookie-parser');
 import { UserResolver } from './resolver/User';
 import { passwordAuthChecker } from './utils/auth-checker';
 import { PlaceResolver } from './resolver/Place';
-import graphqlUploadExpress from 'graphql-upload';
 import { FileUploadResolver } from './resolver/FileUpload';
+import { CategoryResolver } from './resolver/Category';
 
 const startServer = async () => {
   const schema = await buildSchema({
-    resolvers: [UserResolver, PlaceResolver, FileUploadResolver],
+    resolvers: [
+      UserResolver,
+      PlaceResolver,
+      FileUploadResolver,
+      CategoryResolver,
+    ],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,
   });
