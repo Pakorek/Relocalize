@@ -25,8 +25,8 @@ export const passwordAuthChecker: AuthChecker = async (
       }
       const user: User = await repo.findOneOrFail({
         where: { id: +userID },
+        relations: { places: { category: true } },
       });
-      console.log('connectedUser', user);
       // const { id, email, roles } = connectedUser;
       context.user = user;
 

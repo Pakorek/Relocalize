@@ -61,6 +61,7 @@ export class User extends BaseEntity {
   roles!: string;
 
   @OneToMany(() => Place, (place) => place.owner)
+  @Field(() => [Place])
   places?: Place[];
 
   @OneToMany(() => Upload, (upload) => upload.user)
