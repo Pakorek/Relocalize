@@ -1,7 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Place } from '../entity/Place';
 import { dataSource } from '../data-source';
-import { User } from "../entity/User";
 
 
 @Resolver(Place)
@@ -9,13 +8,13 @@ export class PlaceResolver {
   private placeRepo = dataSource.getRepository(Place);
 
   @Mutation(() => Place)
-  // @Authorized()
+  @Authorized()
   public async createPlace(
     @Arg('values', () => Place) values: Place,
     @Ctx() ctx
   ): Promise<Place | void> {
-    // const place = this.placeRepo.create({ ...values, owner: ctx.user.id });
-    const place = this.placeRepo.create({ ...values });
+    // TODO : add created_at format 2023-07-15 16:29:51
+    const place = this.placeRepo.create({ ...values, owner_id: ctx.user.id });
 
     return await this.placeRepo
       .save(place)
@@ -27,10 +26,9 @@ export class PlaceResolver {
     const places = await this.placeRepo.find({
       relations: { owner: true, category: true, tags: true },
     });
-    // const places = await this.placeRepo.find();
 
     if (!places) {
-      throw new Error('Any places founded, sorry !');
+      throw new Error('Any place founded, sorry !');
     }
     return places;
   }
@@ -51,6 +49,7 @@ export class PlaceResolver {
         "Place not found or you're not authorize to update them !"
       );
     }
+    // TODO : add updated_at format 2023-07-15 16:29:51
     const updatedPlace: Place = Object.assign(place, values);
 
     return await this.placeRepo.save(updatedPlace);

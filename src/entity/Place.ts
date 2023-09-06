@@ -151,6 +151,7 @@ export class Place extends BaseEntity {
   owner_id!: number;
 
   @Column({ type: 'int' })
+  @Field()
   category_id!: number;
 
   @ManyToOne(() => User, (user) => user.places)
