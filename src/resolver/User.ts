@@ -5,10 +5,13 @@ import * as bcrypt from 'bcrypt';
 import { generateJwt } from '../utils/helpers';
 import { getRepository } from 'typeorm';
 import { dataSource } from '../data-source';
+import { Place } from "../entity/Place";
+import { Bookmark } from "../entity/Bookmark";
 
 @Resolver(User)
 export class UserResolver {
   private userRepo = dataSource.getRepository(User);
+  private bookmarkRepo = dataSource.getRepository(Bookmark);
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
@@ -36,6 +39,8 @@ export class UserResolver {
     const user = await this.userRepo.findOneOrFail({
       where: { email },
     });
+
+    console.log('authenticate user ', user);
 
     if (user && (await bcrypt.compare(password, user.password)) === true) {
       const token = generateJwt({
@@ -112,5 +117,38 @@ export class UserResolver {
         email: 'ASC',
       },
     });
+  }
+
+  @Mutation(() => Bookmark || Boolean)
+  @Authorized()
+  public async toggleBookmark(
+    @Arg('values', () => Bookmark) values: Bookmark,
+    @Ctx() ctx
+  ): Promise<Bookmark | void | boolean> {
+    const isBookmarkExist = await this.bookmarkRepo.findOne({
+      where: {
+        owner_id: ctx.user.id,
+        place_id: values.place_id,
+      },
+    });
+
+    if (isBookmarkExist) {
+      try {
+        await this.bookmarkRepo.remove(isBookmarkExist);
+        return true;
+      } catch (err) {
+        throw new Error('you are not allowed to delete this bookmark');
+      }
+    }
+
+    // TODO : add created_at format 2023-07-15 16:29:51
+    const bookmark: Bookmark = this.bookmarkRepo.create({
+      ...values,
+      owner_id: ctx.user.id,
+    });
+
+    return await this.bookmarkRepo
+      .save(bookmark)
+      .catch((err) => console.log('save bookmark error', err));
   }
 }

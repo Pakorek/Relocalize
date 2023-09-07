@@ -6,6 +6,7 @@ import { Category } from './entity/Category';
 import { AuthResult } from './entity/AuthResult';
 import { Upload } from './entity/Upload';
 import { Tag } from './entity/Tag';
+import { Bookmark } from './entity/Bookmark';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +18,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: 'agora',
-  entities: [User, Place, Product, Category, Tag, AuthResult, Upload],
+  entities: [User, Place, Product, Category, Tag, AuthResult, Upload, Bookmark],
   synchronize: false,
   migrations: ['migration/*.ts'],
 });

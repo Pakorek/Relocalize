@@ -14,6 +14,7 @@ import { IsBoolean, IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Place } from './Place';
 import { Upload } from './Upload';
+import { Bookmark } from './Bookmark';
 
 export type ROLE = 'CLIENT' | 'PROFESSIONAL';
 
@@ -63,6 +64,10 @@ export class User extends BaseEntity {
   @OneToMany(() => Place, (place) => place.owner)
   @Field(() => [Place])
   places?: Place[];
+
+  @OneToMany(() => Bookmark, (bm) => bm.owner)
+  @Field(() => [Bookmark])
+  bookmarks?: Bookmark[];
 
   @OneToMany(() => Upload, (upload) => upload.user)
   uploads?: Upload[];

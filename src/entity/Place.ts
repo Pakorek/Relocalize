@@ -18,6 +18,7 @@ import { User } from './User';
 import { Category } from './Category';
 import { Upload } from './Upload';
 import { Tag } from './Tag';
+import { Bookmark } from './Bookmark';
 
 // export type BILLING_PLAN = 'FREE' | 'COMMISSION';
 export type PROFESSIONAL_AREA =
@@ -168,6 +169,10 @@ export class Place extends BaseEntity {
 
   @OneToMany(() => Product, (product) => product.place)
   products?: Product[];
+
+  @OneToMany(() => Bookmark, (bm) => bm.place)
+  @Field(() => [Bookmark])
+  bookmarks?: Bookmark[];
 
   @ManyToMany(() => Tag, (tag) => tag.places)
   @JoinTable({
