@@ -32,6 +32,7 @@ export type PROFESSIONAL_AREA =
 @Entity()
 export class Place extends BaseEntity {
   @PrimaryGeneratedColumn()
+  @Field()
   id!: number;
 
   @Field()

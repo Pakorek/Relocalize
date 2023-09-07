@@ -22,15 +22,44 @@ export class PlaceResolver {
   }
 
   @Query(() => [Place])
-  public async getPlaces(): Promise<Place[] | void> {
+  public async getProPlaces(): Promise<Place[] | void> {
     const places = await this.placeRepo.find({
       relations: { owner: true, category: true, tags: true },
+      where: { type: 'PROFESSIONAL' },
     });
 
     if (!places) {
       throw new Error('Any place founded, sorry !');
     }
     return places;
+  }
+
+  @Query(() => [Place])
+  public async getAssoPlaces(): Promise<Place[] | void> {
+    const places = await this.placeRepo.find({
+      relations: { owner: true, category: true, tags: true },
+      where: { type: 'ASSOCIATION' },
+    });
+
+    if (!places) {
+      throw new Error('Any place founded, sorry !');
+    }
+    return places;
+  }
+
+  @Query(() => Place)
+  public async getPlaceById(@Arg('id') id: number): Promise<Place> {
+    const place: Place | null = await this.placeRepo.findOne({
+      where: { id: id },
+      relations: { owner: true, category: true, tags: true },
+    });
+
+    if (!place) {
+      throw new Error(
+        "Place not found or you're not authorize to update them !"
+      );
+    }
+    return place;
   }
 
   @Mutation(() => Place)
