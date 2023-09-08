@@ -3,10 +3,8 @@ import { AuthResult } from '../entity/AuthResult';
 import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
 import { generateJwt } from '../utils/helpers';
-import { getRepository } from 'typeorm';
 import { dataSource } from '../data-source';
-import { Place } from "../entity/Place";
-import { Bookmark } from "../entity/Bookmark";
+import { Bookmark } from '../entity/Bookmark';
 
 @Resolver(User)
 export class UserResolver {
@@ -39,8 +37,6 @@ export class UserResolver {
     const user = await this.userRepo.findOneOrFail({
       where: { email },
     });
-
-    console.log('authenticate user ', user);
 
     if (user && (await bcrypt.compare(password, user.password)) === true) {
       const token = generateJwt({
@@ -150,5 +146,20 @@ export class UserResolver {
     return await this.bookmarkRepo
       .save(bookmark)
       .catch((err) => console.log('save bookmark error', err));
+  }
+
+  @Query(() => Boolean)
+  @Authorized()
+  public async isPlaceBookmarked(
+    @Arg('id') id: number,
+    @Ctx() ctx
+  ): Promise<boolean> {
+    const bookmark = await this.bookmarkRepo.findOne({
+      where: {
+        owner_id: ctx.user.id,
+        place_id: id,
+      },
+    });
+    return bookmark !== null;
   }
 }
