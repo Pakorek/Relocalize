@@ -10,8 +10,8 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  JoinColumn,
-} from 'typeorm';
+  JoinColumn, BeforeInsert
+} from "typeorm";
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
 import { User } from './User';
@@ -201,6 +201,11 @@ export class Place extends BaseEntity {
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;
+
+  @BeforeInsert()
+  updateDates() {
+    this.created_at = new Date();
+  }
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
