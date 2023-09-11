@@ -68,7 +68,7 @@ export class PlaceResolver {
     @Arg('id') id: number,
     @Arg('values') values: Place
     // @Ctx() ctx
-  ): Promise<Place> {
+  ): Promise<Place | void> {
     const place: Place | null = await this.placeRepo.findOne({
       where: { id: id },
     });
@@ -81,7 +81,9 @@ export class PlaceResolver {
     // TODO : add updated_at format 2023-07-15 16:29:51
     const updatedPlace: Place = Object.assign(place, values);
 
-    return await this.placeRepo.save(updatedPlace);
+    return await this.placeRepo
+      .save(updatedPlace)
+      .catch((err) => console.log('update place error', err));
   }
 
   @Mutation(() => Boolean)

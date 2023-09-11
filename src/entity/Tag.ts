@@ -15,6 +15,7 @@ import { Place } from './Place';
 @Entity()
 export class Tag extends BaseEntity {
   @PrimaryGeneratedColumn()
+  @Field()
   id!: number;
 
   @Field()
@@ -35,3 +36,9 @@ export class Tag extends BaseEntity {
   // @OneToMany(() => Service, (service) => service.category)
   // services?: Service[];
 }
+
+// @InputType('TagInput')
+// export class TagInput {
+//   @Field()
+//   id!: number;
+// }

@@ -11,7 +11,7 @@ import {
   ManyToMany,
   JoinTable,
   JoinColumn, BeforeInsert
-} from "typeorm";
+} from 'typeorm';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
 import { User } from './User';
