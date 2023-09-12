@@ -10,12 +10,14 @@ import { PlaceResolver } from './resolver/Place';
 import { FileUploadResolver } from './resolver/FileUpload';
 import { CategoryResolver } from './resolver/Category';
 import { TagResolver } from './resolver/Tag';
+import { ProductResolver } from './resolver/Product';
 
 const startServer = async () => {
   const schema = await buildSchema({
     resolvers: [
       UserResolver,
       PlaceResolver,
+      ProductResolver,
       FileUploadResolver,
       CategoryResolver,
       TagResolver,

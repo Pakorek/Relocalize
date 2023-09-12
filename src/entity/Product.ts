@@ -8,13 +8,15 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable, OneToMany
+  JoinTable,
+  OneToMany,
+  BeforeInsert, JoinColumn
 } from "typeorm";
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Category } from './Category';
 import { Place } from './Place';
 import { Tag } from './Tag';
-import { Upload } from "./Upload";
+import { Upload } from './Upload';
 
 @ObjectType('Product')
 @InputType('ProductInput')
@@ -24,9 +26,13 @@ export class Product extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column({ type: 'varchar', length: 255 })
-  @IsNotEmpty({ message: 'The name is required' })
-  name!: string;
+  @Column({ type: 'varchar', length: 50 })
+  @IsNotEmpty({ message: 'The title is required' })
+  title!: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 120 })
+  subtitle?: string;
 
   @Field()
   @Column({ type: 'int' })
@@ -35,26 +41,64 @@ export class Product extends BaseEntity {
   price!: number;
 
   @Field()
+  @Column({ type: 'text' })
+  @IsNotEmpty({ message: 'The description is required' })
+  description!: string;
+
+  @Field()
   @Column({ type: 'varchar', length: 255 })
   @IsOptional()
-  ref?: string;
+  quantitative?: string;
+
+  @Field()
+  @Column({ type: 'varchar', length: 255 })
+  @IsOptional()
+  reference?: string;
+
+  @Column({ type: 'int' })
+  @Field()
+  place_id!: number;
+
+  @Column({ type: 'int' })
+  @Field()
+  category_id!: number;
 
   @ManyToOne(() => Category, (category) => category.products)
-  category!: Category;
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
+  @Field(() => Category)
+  category?: Category;
 
   @ManyToOne(() => Place, (place) => place.products)
+  @JoinColumn({ name: 'place_id', referencedColumnName: 'id' })
+  @Field(() => Place)
   place!: Place;
 
-  @ManyToMany(() => Tag, (tag) => tag.places)
-  @JoinTable({ name: 'product_has_tags' })
+  @ManyToMany(() => Tag, (tag) => tag.products)
+  @JoinTable({
+    name: 'product_has_tags',
+    joinColumn: {
+      name: 'product_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
+    },
+  })
+  @Field(() => [Tag])
   tags?: Tag[];
 
   @OneToMany(() => Upload, (upload) => upload.product)
   uploads?: Upload[];
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  updated_at!: Date;
+
+  @BeforeInsert()
+  updateDates() {
+    this.created_at = new Date();
+  }
 }

@@ -2,7 +2,6 @@ import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Place } from '../entity/Place';
 import { dataSource } from '../data-source';
 
-
 @Resolver(Place)
 export class PlaceResolver {
   private placeRepo = dataSource.getRepository(Place);
