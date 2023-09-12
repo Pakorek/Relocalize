@@ -4,8 +4,10 @@ import {
   BaseEntity,
   Column,
   PrimaryGeneratedColumn,
-  OneToMany, ManyToOne, JoinColumn
-} from "typeorm";
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { Product } from './Product';
 import { Service } from './Service';

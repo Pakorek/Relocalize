@@ -10,8 +10,9 @@ import {
   ManyToMany,
   JoinTable,
   OneToMany,
-  BeforeInsert, JoinColumn
-} from "typeorm";
+  BeforeInsert,
+  JoinColumn,
+} from 'typeorm';
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Category } from './Category';
 import { Place } from './Place';
@@ -23,6 +24,7 @@ import { Upload } from './Upload';
 @Entity()
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
+  @Field()
   id!: number;
 
   @Field()

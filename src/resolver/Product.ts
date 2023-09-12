@@ -65,9 +65,7 @@ export class ProductResolver {
         "product not found or you're not authorize to update them !"
       );
     }
-    // TODO : add updated_at format 2023-07-15 16:29:51
     const updatedProduct: Product = Object.assign(product, values);
-
     return await this.productRepo
       .save(updatedProduct)
       .catch((err) => console.log('update product error', err));

@@ -5,11 +5,15 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
-import { IsAlpha, IsAlphanumeric, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsAlpha,
+  IsAlphanumeric,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 import { PROFESSIONAL_AREA } from './Place';
-
 
 @ObjectType('Prospect')
 @InputType('ProspectInput')

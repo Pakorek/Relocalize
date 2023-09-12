@@ -50,7 +50,12 @@ export class PlaceResolver {
   public async getPlaceById(@Arg('id') id: number): Promise<Place> {
     const place: Place | null = await this.placeRepo.findOne({
       where: { id: id },
-      relations: { owner: true, category: true, tags: true },
+      relations: {
+        owner: true,
+        category: true,
+        tags: true,
+        products: { category: true, tags: true },
+      },
     });
 
     if (!place) {

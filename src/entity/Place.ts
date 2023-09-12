@@ -10,7 +10,8 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  JoinColumn, BeforeInsert
+  JoinColumn,
+  BeforeInsert,
 } from 'typeorm';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
@@ -168,6 +169,7 @@ export class Place extends BaseEntity {
   category?: Category;
 
   @OneToMany(() => Product, (product) => product.place)
+  @Field(() => [Product])
   products?: Product[];
 
   @OneToMany(() => Bookmark, (bm) => bm.place)
