@@ -125,6 +125,7 @@ export class UserResolver {
       where: {
         owner_id: ctx.user.id,
         place_id: values.place_id,
+        product_id: values.product_id,
       },
     });
 
@@ -150,14 +151,15 @@ export class UserResolver {
 
   @Query(() => Boolean)
   @Authorized()
-  public async isPlaceBookmarked(
-    @Arg('id') id: number,
+  public async isBookmarked(
+    @Arg('values', () => Bookmark) values: Bookmark,
     @Ctx() ctx
   ): Promise<boolean> {
     const bookmark = await this.bookmarkRepo.findOne({
       where: {
         owner_id: ctx.user.id,
-        place_id: id,
+        place_id: values.place_id,
+        product_id: values.product_id,
       },
     });
     return bookmark !== null;

@@ -18,6 +18,7 @@ import { Category } from './Category';
 import { Place } from './Place';
 import { Tag } from './Tag';
 import { Upload } from './Upload';
+import { Bookmark } from "./Bookmark";
 
 @ObjectType('Product')
 @InputType('ProductInput')
@@ -89,6 +90,10 @@ export class Product extends BaseEntity {
   })
   @Field(() => [Tag])
   tags?: Tag[];
+
+  @OneToMany(() => Bookmark, (bm) => bm.place)
+  @Field(() => [Bookmark])
+  bookmarks?: Bookmark[];
 
   @OneToMany(() => Upload, (upload) => upload.product)
   uploads?: Upload[];

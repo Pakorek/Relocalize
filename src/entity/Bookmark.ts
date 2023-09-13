@@ -27,6 +27,10 @@ export class Bookmark extends BaseEntity {
   @Field()
   place_id?: number;
 
+  @Column()
+  @Field()
+  product_id?: number;
+
   @ManyToOne(() => User, (user) => user.bookmarks)
   @JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
   @Field(() => User)
@@ -38,8 +42,10 @@ export class Bookmark extends BaseEntity {
   @Field(() => Place)
   place?: Place;
 
-  // @ManyToMany(() => Product, (product) => product.BookMarks)
-  // products?: Product[];
+  @ManyToOne(() => Product, (product) => product.bookmarks)
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
+  @Field(() => Place)
+  product?: Product;
 
   // @OneToMany(() => Service, (service) => service.category)
   // services?: Service[];
