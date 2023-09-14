@@ -25,7 +25,7 @@ export class ProductResolver {
   ): Promise<Product[] | void> {
     const products = await this.productRepo.find({
       relations: { place: true, category: true, tags: true },
-      where: { place: place_id },
+      where: { place_id },
     });
 
     if (!products) {

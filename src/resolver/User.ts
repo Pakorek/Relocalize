@@ -3,8 +3,8 @@ import { AuthResult } from '../entity/AuthResult';
 import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
 import { generateJwt } from '../utils/helpers';
-import { dataSource } from '../data-source';
 import { Bookmark } from '../entity/Bookmark';
+import { dataSource } from '../data-source';
 
 @Resolver(User)
 export class UserResolver {

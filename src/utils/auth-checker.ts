@@ -1,30 +1,23 @@
-import { AuthChecker } from 'type-graphql';
-import { getManager } from 'typeorm';
+import { AuthChecker, ResolverData } from 'type-graphql';
 import { dataType, decodeJwt } from './helpers';
 import { User } from '../entity/User';
 import { dataSource } from '../data-source';
 
 export const passwordAuthChecker: AuthChecker = async (
-  { context }: any,
+  { root, args, context, info }: ResolverData<any>,
   roles
 ) => {
   // `roles` comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
   try {
-    const token = context.req.headers.authorization.split('Bearer ')[1];
+    const token = context.token;
 
     if (token) {
       const repo = dataSource.getRepository(User);
       // what happen if string ?
-
       const data: dataType | string = decodeJwt(token);
+      // TODO : need to manage string case
+      const userID: number = typeof data === 'string' ? +data : data.userId;
 
-      // 6 next lines aren't ok : need to manage string case
-      let userID: number;
-      if (typeof data === 'string') {
-        userID = +data;
-      } else {
-        userID = data.userId;
-      }
       const user: User = await repo.findOneOrFail({
         where: { id: +userID },
         relations: { places: { category: true, tags: true } },
