@@ -78,8 +78,6 @@ export class UserResolver {
       where: { id: id },
     });
 
-    console.log('updateUser', user);
-
     if (!user) {
       throw new Error(
         "User not found or you're not authorize to update them !"

@@ -30,6 +30,10 @@ export class Image extends BaseEntity {
 
   @Field()
   @Column()
+  public_id!: string;
+
+  @Field()
+  @Column()
   filename?: string;
 
   @Field()
