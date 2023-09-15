@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from 'type-graphql';
+import { Field, InputType, ObjectType, registerEnumType } from "type-graphql";
 import {
   Entity,
   BaseEntity,
@@ -6,14 +6,18 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne, BeforeInsert
+  ManyToOne, BeforeInsert, JoinColumn
 } from "typeorm";
-import { IsUrl } from 'class-validator';
-import { Place } from './Place';
-import { Product } from './Product';
+import { IsUrl } from "class-validator";
+import { Place } from "./Place";
+import { Product } from "./Product";
+import { EntityTarget } from "./type/Image";
 
-@ObjectType('Image')
-@InputType('ImageInput')
+registerEnumType(EntityTarget, {
+  name: 'EntityTarget',
+});
+@ObjectType("Image")
+@InputType("ImageInput")
 @Entity()
 export class Image extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -32,21 +36,36 @@ export class Image extends BaseEntity {
   @Column()
   description?: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @Field(() => EntityTarget)
+  target?: EntityTarget;
+
+  @Field()
+  target_id?: number;
+
+  @Column({ type: "int" })
+  @Field()
+  place_id?: number;
+
+  @Column({ type: "int" })
+  @Field()
+  product_id?: number;
+
+  @CreateDateColumn({ type: "timestamp" })
   created_at!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: "timestamp" })
   updated_at!: Date;
 
   @ManyToOne(() => Place, (place) => place.images)
+  @JoinColumn({ name: "place_id", referencedColumnName: "id" })
   place?: Place;
 
   @ManyToOne(() => Product, (product) => product.images)
+  @JoinColumn({ name: "product_id", referencedColumnName: "id" })
   product?: Product;
 
   @BeforeInsert()
   updateDates() {
     this.created_at = new Date();
   }
-
 }

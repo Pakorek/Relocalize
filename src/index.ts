@@ -17,6 +17,7 @@ import { CategoryResolver } from './resolver/Category';
 import { TagResolver } from './resolver/Tag';
 import { ProductResolver } from './resolver/Product';
 import { AppDataSource } from './AppDataSource';
+import { ImageResolver } from "./resolver/Image";
 
 interface MyContext {
   token?: string;
@@ -30,7 +31,7 @@ const startServer = async () => {
       UserResolver,
       PlaceResolver,
       ProductResolver,
-      FileUploadResolver,
+      ImageResolver,
       CategoryResolver,
       TagResolver,
     ],

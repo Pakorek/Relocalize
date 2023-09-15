@@ -1,18 +1,29 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { User } from '../entity/User';
-import * as bcrypt from 'bcrypt';
-import { generateJwt } from '../utils/helpers';
-import { getRepository } from 'typeorm';
-import { Upload } from '../entity/Upload';
+import { Arg, Mutation, Resolver } from "type-graphql";
+import { Image } from "../entity/Image";
+import { dataSource } from "../data-source";
+import { EntityTarget } from "../entity/type/Image";
 
-@Resolver(Upload)
+@Resolver(Image)
 export class ImageResolver {
-  private imageRepo = getRepository(Upload);
+  private imageRepo = dataSource.getRepository(Image);
 
-  // @Mutation(() => Upload)
-  // public async uploadFile(@Arg('file') file: File): Promise<Upload> {
-  //
-  // }
+  @Mutation(() => Image)
+  public async addImage(@Arg('image', () => Image) image: Image): Promise<Image | void> {
+    let entity: Image | undefined = undefined;
+    switch (image.target) {
+      case EntityTarget.PLACE:
+        entity = this.imageRepo.create({ url: image.url, place_id: image.target_id });
+        break;
+      case EntityTarget.PRODUCT:
+        entity = this.imageRepo.create({ url: image.url, product_id: image.target_id });
+        break;
+    }
+    if (entity) {
+      return await this.imageRepo
+        .save(entity)
+        .catch((err) => console.log('save image error', err));
+    }
+  }
 
   @Mutation(() => Boolean)
   public async deleteImage(@Arg('id') id: number): Promise<boolean> {
