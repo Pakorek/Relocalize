@@ -20,6 +20,7 @@ import { Category } from './Category';
 import { Upload } from './Upload';
 import { Tag } from './Tag';
 import { Bookmark } from './Bookmark';
+import { Image } from "./Image";
 
 // export type BILLING_PLAN = 'FREE' | 'COMMISSION';
 export type PROFESSIONAL_AREA =
@@ -191,8 +192,9 @@ export class Place extends BaseEntity {
   @Field(() => [Tag])
   tags?: Tag[];
 
-  @OneToMany(() => Upload, (upload) => upload.place)
-  uploads?: Upload[];
+  @OneToMany(() => Image, (image) => image.place)
+  @Field(() => [Image])
+  images?: Image[];
 
   // @OneToMany(() => Service, (service) => service.place)
   // services?: Service[];

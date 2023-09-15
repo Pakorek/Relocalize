@@ -48,14 +48,14 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 35 })
   pseudo?: string;
 
-  // @Field()
-  // @Column({
-  //   type: 'varchar',
-  //   length: 255,
-  //   default:
-  //     'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y',
-  // })
-  // avatar?: string;
+  @Field()
+  @Column({
+    type: 'varchar',
+    length: 255,
+    default:
+      'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y',
+  })
+  avatar?: string;
 
   @Field()
   @Column({ type: 'json' })
@@ -69,8 +69,8 @@ export class User extends BaseEntity {
   @Field(() => [Bookmark])
   bookmarks?: Bookmark[];
 
-  @OneToMany(() => Upload, (upload) => upload.user)
-  uploads?: Upload[];
+  // @OneToMany(() => Upload, (upload) => upload.user)
+  // uploads?: Upload[];
 
   // @OneToOne(() => ContactInformation)
   // @JoinColumn()

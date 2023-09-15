@@ -14,8 +14,8 @@ import { ReadStream } from 'fs';
 import { Place } from './Place';
 import { Product } from './Product';
 
-@ObjectType('Image')
-@InputType('ImageInput')
+@ObjectType('Upload')
+@InputType('UploadInput')
 @Entity()
 export class Upload extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -46,12 +46,12 @@ export class Upload extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.uploads)
-  user?: User;
+  // @ManyToOne(() => User, (user) => user.uploads)
+  // user?: User;
 
-  @ManyToOne(() => Place, (place) => place.uploads)
-  place?: Place;
-
-  @ManyToOne(() => Product, (product) => product.uploads)
-  product?: Product;
+  // @ManyToOne(() => Place, (place) => place.uploads)
+  // place?: Place;
+  //
+  // @ManyToOne(() => Product, (product) => product.uploads)
+  // product?: Product;
 }

@@ -4,7 +4,7 @@ import { Place } from './entity/Place';
 import { Product } from './entity/Product';
 import { Category } from './entity/Category';
 import { AuthResult } from './entity/AuthResult';
-import { Upload } from './entity/Upload';
+import { Image } from "./entity/Image";
 import { Tag } from './entity/Tag';
 import { Bookmark } from './entity/Bookmark';
 
@@ -18,7 +18,7 @@ export const dataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: 'agora',
-  entities: [User, Place, Product, Category, Tag, AuthResult, Upload, Bookmark],
+  entities: [User, Place, Product, Category, Tag, AuthResult, Image, Bookmark],
   synchronize: false,
   migrations: ['migration/*.ts'],
 });

@@ -19,6 +19,7 @@ import { Place } from './Place';
 import { Tag } from './Tag';
 import { Upload } from './Upload';
 import { Bookmark } from "./Bookmark";
+import { Image } from "./Image";
 
 @ObjectType('Product')
 @InputType('ProductInput')
@@ -95,8 +96,9 @@ export class Product extends BaseEntity {
   @Field(() => [Bookmark])
   bookmarks?: Bookmark[];
 
-  @OneToMany(() => Upload, (upload) => upload.product)
-  uploads?: Upload[];
+  @OneToMany(() => Image, (image) => image.product)
+  @Field(() => [Image])
+  images?: Image[];
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;

@@ -1,5 +1,4 @@
 import { Resolver, Mutation, Arg, Ctx, Authorized } from 'type-graphql';
-import GraphQLUpload from 'graphql-upload';
 import cloudinary from 'cloudinary';
 import { Upload } from '../entity/Upload';
 import dotenv from 'dotenv';
