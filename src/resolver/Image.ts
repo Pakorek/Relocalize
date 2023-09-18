@@ -27,10 +27,13 @@ export class ImageResolver {
           : Object.assign(entity, {...entity, public_id: image.public_id, url: image.url});
         break;
       case EntityTarget.PRODUCT:
-        entity = this.imageRepo.create({
-          url: image.url,
-          product_id: image.target_id,
-          public_id: image.public_id });
+        entity = !entity
+          ? this.imageRepo.create({
+            url: image.url,
+            product_id: image.target_id,
+            public_id: image.public_id
+          })
+          : Object.assign(entity, {...entity, public_id: image.public_id, url: image.url});
         break;
     }
     if (entity) {

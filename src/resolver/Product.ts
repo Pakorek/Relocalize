@@ -58,6 +58,7 @@ export class ProductResolver {
   ): Promise<Product | void> {
     const product: Product | null = await this.productRepo.findOne({
       where: { id: id },
+      relations: {images: true}
     });
 
     if (!product) {

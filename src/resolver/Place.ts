@@ -54,7 +54,7 @@ export class PlaceResolver {
         owner: true,
         category: true,
         tags: true,
-        products: { category: true, tags: true },
+        products: { category: true, tags: true, images: true },
       },
     });
 
