@@ -92,11 +92,11 @@ export class Product extends BaseEntity {
   @Field(() => [Tag])
   tags?: Tag[];
 
-  @OneToMany(() => Bookmark, (bm) => bm.place)
+  @OneToMany(() => Bookmark, (bm) => bm.place, {onDelete: "CASCADE"})
   @Field(() => [Bookmark])
   bookmarks?: Bookmark[];
 
-  @OneToMany(() => Image, (image) => image.product)
+  @OneToMany(() => Image, (image) => image.product, {onDelete: "CASCADE"})
   @Field(() => [Image])
   images?: Image[];
 

@@ -73,9 +73,9 @@ export class ProductResolver {
   }
 
   @Mutation(() => Boolean)
+  @Authorized()
   public async deleteProduct(@Arg('id') id: number): Promise<boolean> {
     const product = await this.productRepo.findOne({ where: { id } });
-
     if (!product) {
       throw new Error('product not found !');
     }
