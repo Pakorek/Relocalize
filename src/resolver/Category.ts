@@ -1,6 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { dataSource } from '../data-source';
 import { Category } from '../entity/Category';
+import { IsNull, Not } from "typeorm";
 
 type groupedCategories = {
   label: string;
@@ -75,6 +76,42 @@ export class CategoryResolver {
     }
 
     return categories;
+  }
+
+  @Query(() => [Category])
+  public async getProductCategories(): Promise<groupedCategories[] | void> {
+    const categories = await this.categoryRepo.find({
+      where: { product_type: Not(IsNull()) },
+      order: {
+        product_type: 'ASC',
+        label: 'ASC'
+      },
+    });
+
+    if (!categories) {
+      throw new Error('Any category founded, sorry !');
+    }
+    const groupedData = {};
+    categories.forEach((item: Category) => {
+      const parent = item.product_type;
+      if (parent) {
+        if (!groupedData[parent]) {
+          groupedData[parent] = {
+            label: parent,
+            childs: [],
+          };
+        }
+        groupedData[parent].childs.push({
+          id: item.id,
+          label: item.label,
+        });
+      }
+    });
+
+    return Object.values(groupedData);
+
+
+    // return categories;
   }
 
   @Mutation(() => Category)

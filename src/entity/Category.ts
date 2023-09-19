@@ -30,6 +30,10 @@ export class Category extends BaseEntity {
   @Column()
   place_type?: string;
 
+  @Field()
+  @Column()
+  product_type?: string;
+
   @Column()
   parent_id?: number;
 
