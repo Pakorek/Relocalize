@@ -188,7 +188,7 @@ export class UserResolver {
     @Ctx() ctx
   ): Promise<(Product | undefined)[]> {
     const bookmarks: Bookmark[] = await this.bookmarkRepo.find({
-      relations: {product: {images: true, category: true}},
+      relations: {product: {images: true, category: true, place: true}},
       where: {
         owner_id: ctx.user.id,
         product_id: Not(IsNull())
