@@ -1,15 +1,18 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { AuthResult } from '../entity/AuthResult';
-import { User } from '../entity/User';
-import * as bcrypt from 'bcrypt';
-import { generateJwt } from '../utils/helpers';
-import { Bookmark } from '../entity/Bookmark';
-import { dataSource } from '../data-source';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { AuthResult } from "../entity/AuthResult";
+import { User } from "../entity/User";
+import * as bcrypt from "bcrypt";
+import { generateJwt } from "../utils/helpers";
+import { Bookmark } from "../entity/Bookmark";
+import { dataSource } from "../data-source";
+import { IsNull, Not, Repository } from "typeorm";
+import { Place } from "../entity/Place";
+import { Product } from "../entity/Product";
 
 @Resolver(User)
 export class UserResolver {
-  private userRepo = dataSource.getRepository(User);
-  private bookmarkRepo = dataSource.getRepository(Bookmark);
+  private userRepo: Repository<User> = dataSource.getRepository(User);
+  private bookmarkRepo: Repository<Bookmark> = dataSource.getRepository(Bookmark);
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
@@ -34,7 +37,7 @@ export class UserResolver {
     @Arg('password') password: string
     // @Ctx() ctx
   ): Promise<AuthResult> {
-    const user = await this.userRepo.findOneOrFail({
+    const user: User = await this.userRepo.findOneOrFail({
       where: { email },
     });
 
@@ -57,8 +60,8 @@ export class UserResolver {
   public async createUser(
     @Arg('values', () => User) values: User
   ): Promise<User | void> {
-    const hash = await UserResolver.hashPassword(values.password);
-    const user = this.userRepo.create({ ...values, password: hash });
+    const hash: string = await UserResolver.hashPassword(values.password);
+    const user: User = this.userRepo.create({ ...values, password: hash });
 
     // TODO : on dev, need use object with spread operator then stringify
     user.roles = JSON.stringify(['ROLE_USER']);
@@ -90,7 +93,7 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   public async deleteUser(@Arg('id') id: number): Promise<boolean> {
-    const user = await this.userRepo.findOne({ where: { id } });
+    const user: User | null = await this.userRepo.findOne({ where: { id } });
 
     if (!user) {
       throw new Error('User not found !');
@@ -119,7 +122,7 @@ export class UserResolver {
     @Arg('values', () => Bookmark) values: Bookmark,
     @Ctx() ctx
   ): Promise<Bookmark | void | boolean> {
-    const isBookmarkExist = await this.bookmarkRepo.findOne({
+    const isBookmarkExist: Bookmark | null = await this.bookmarkRepo.findOne({
       where: {
         owner_id: ctx.user.id,
         place_id: values.place_id,
@@ -153,7 +156,7 @@ export class UserResolver {
     @Arg('values', () => Bookmark) values: Bookmark,
     @Ctx() ctx
   ): Promise<boolean> {
-    const bookmark = await this.bookmarkRepo.findOne({
+    const bookmark: Bookmark | null = await this.bookmarkRepo.findOne({
       where: {
         owner_id: ctx.user.id,
         place_id: values.place_id,
@@ -161,5 +164,37 @@ export class UserResolver {
       },
     });
     return bookmark !== null;
+  }
+
+  @Query(() => [Place])
+  @Authorized()
+  public async getBookmarkedPlaces(
+    @Ctx() ctx
+  ): Promise<(Place | undefined)[]> {
+    const bookmarks: Bookmark[] = await this.bookmarkRepo.find({
+      relations: {place: {images: true, category: true}},
+      where: {
+        owner_id: ctx.user.id,
+        place_id: Not(IsNull())
+      },
+    });
+
+    return bookmarks.map(b => b.place);
+  }
+
+  @Query(() => [Product])
+  @Authorized()
+  public async getBookmarkedProducts(
+    @Ctx() ctx
+  ): Promise<(Product | undefined)[]> {
+    const bookmarks: Bookmark[] = await this.bookmarkRepo.find({
+      relations: {product: {images: true, category: true}},
+      where: {
+        owner_id: ctx.user.id,
+        product_id: Not(IsNull())
+      },
+    });
+
+    return bookmarks.map(b => b.product);
   }
 }

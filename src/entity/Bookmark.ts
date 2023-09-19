@@ -44,7 +44,7 @@ export class Bookmark extends BaseEntity {
 
   @ManyToOne(() => Product, (product) => product.bookmarks)
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
-  @Field(() => Place)
+  @Field(() => Product)
   product?: Product;
 
   // @OneToMany(() => Service, (service) => service.category)
