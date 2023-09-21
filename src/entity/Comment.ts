@@ -31,10 +31,10 @@ export class Comment extends BaseEntity {
   })
   content!: string;
 
-  @Field()
-  @Column({type: 'smallint', default: 0})
-  @IsPositive()
-  nbLikes?: number;
+  // @Field()
+  // @Column({type: 'smallint', default: 0})
+  // @IsPositive()
+  // nbLikes?: number;
 
   @Column({ type: 'int' })
   owner_id!: number;

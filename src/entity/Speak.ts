@@ -67,7 +67,17 @@ export class Speak extends BaseEntity {
   // Manage likes
   @Field(() => [User])
   @ManyToMany(() => User)
-  @JoinTable({ name: 'speaks_are_liked'})
+  @JoinTable({
+    name: 'speaks_are_liked',
+    joinColumn: {
+      name: 'speak_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
   likes?: User[];
 
   @Field()
