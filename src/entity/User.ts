@@ -8,13 +8,14 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
-} from 'typeorm';
+  OneToMany, BeforeInsert
+} from "typeorm";
 import { IsBoolean, IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ContactInformation } from './ContactInformation';
 import { Place } from './Place';
 import { Upload } from './Upload';
 import { Bookmark } from './Bookmark';
+import { Speak } from "./Speak";
 
 export type ROLE = 'CLIENT' | 'PROFESSIONAL';
 
@@ -69,6 +70,10 @@ export class User extends BaseEntity {
   @Field(() => [Bookmark])
   bookmarks?: Bookmark[];
 
+  @OneToMany(() => Speak, (speak) => speak.owner)
+  @Field(() => [Speak])
+  speaks?: Speak[];
+
   // @OneToMany(() => Upload, (upload) => upload.user)
   // uploads?: Upload[];
 
@@ -81,4 +86,9 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
+
+  @BeforeInsert()
+  updateDates() {
+    this.created_at = new Date();
+  }
 }

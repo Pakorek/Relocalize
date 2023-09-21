@@ -18,6 +18,8 @@ import { TagResolver } from './resolver/Tag';
 import { ProductResolver } from './resolver/Product';
 import { AppDataSource } from './AppDataSource';
 import { ImageResolver } from "./resolver/Image";
+import { SpeakResolver } from "./resolver/Speak";
+import { CommentResolver } from "./resolver/Comment";
 
 interface MyContext {
   token?: string;
@@ -34,6 +36,8 @@ const startServer = async () => {
       ImageResolver,
       CategoryResolver,
       TagResolver,
+      SpeakResolver,
+      CommentResolver
     ],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,
