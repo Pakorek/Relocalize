@@ -46,6 +46,29 @@ export class Speak extends BaseEntity {
   @IsPositive()
   nb_of_shares?: number;
 
+  @Field()
+  @Column({type: 'boolean'})
+  @IsBoolean()
+  is_event!: boolean;
+
+  @Field()
+  @Column({ type: 'timestamp' })
+  from_date?: Date;
+
+  @Field()
+  @Column({ type: 'timestamp' })
+  to_date?: Date;
+
+  @Field()
+  @Column({type: 'boolean'})
+  @IsBoolean()
+  is_registration_required!: boolean;
+
+  @Field()
+  @Column({type: 'boolean'})
+  @IsBoolean()
+  is_comment_allowed!: boolean;
+
   @Column({ type: 'int' })
   owner_id!: number;
 
