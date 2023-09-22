@@ -23,7 +23,7 @@ export class SpeakResolver {
   public async getSpeaksByTarget(@Arg('target', () => String) target: TargetType): Promise<Speak[] | void> {
     return await this.speakRepo.find({
       where: { target: target },
-      relations: { owner: true, comments: true, likes: true},
+      relations: { owner: true, comments: { owner: true }, likes: true},
       order: { created_at: "DESC" }
     });
   }
@@ -93,18 +93,11 @@ export class SpeakResolver {
       );
     }
 
-    let updatedSpeak;
-    if (spk.likes && spk.likes.length > 0) {
-      // if not liked yet
-      updatedSpeak = Object.assign(speak, {...spk, likes: [...spk.likes, ctx.user]});
-      // else
-      const filtered =  spk.likes.filter((l) => l.id !== ctx.user.id)
-      updatedSpeak = Object.assign(speak, {...spk, likes: filtered});
-    } else {
-      updatedSpeak = Object.assign(speak, {...spk, likes: [ctx.user]});
-    }
+    const filtered =  spk.likes?.filter((l) => l.id !== ctx.user.id);
+    const updatedSpeak = filtered?.length === spk.likes.length
+      ? Object.assign(speak, {...spk, likes: [...spk.likes, ctx.user]})
+      : Object.assign(speak, {...spk, likes: filtered});
 
     return await this.speakRepo.save(updatedSpeak);
   }
-
 }

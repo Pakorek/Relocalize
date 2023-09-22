@@ -101,7 +101,7 @@ export class Speak extends BaseEntity {
       referencedColumnName: 'id',
     },
   })
-  likes?: User[];
+  likes!: User[];
 
   @Field()
   @CreateDateColumn({ type: 'timestamp' })
