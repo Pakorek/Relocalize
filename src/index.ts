@@ -20,6 +20,7 @@ import { AppDataSource } from './AppDataSource';
 import { ImageResolver } from "./resolver/Image";
 import { SpeakResolver } from "./resolver/Speak";
 import { CommentResolver } from "./resolver/Comment";
+import { TradeBackResolver } from "./resolver/TradeBack";
 
 interface MyContext {
   token?: string;
@@ -37,7 +38,8 @@ const startServer = async () => {
       CategoryResolver,
       TagResolver,
       SpeakResolver,
-      CommentResolver
+      CommentResolver,
+      TradeBackResolver
     ],
     authChecker: passwordAuthChecker,
     nullableByDefault: true,

@@ -11,6 +11,7 @@ import { Bookmark } from "./entity/Bookmark";
 import dotenv from "dotenv";
 import { Speak } from "./entity/Speak";
 import { Comment } from "./entity/Comment";
+import { TradeBack } from "./entity/TradeBack";
 
 dotenv.config();
 
@@ -31,7 +32,8 @@ export const dataSource = new DataSource({
     Image,
     Bookmark,
     Speak,
-    Comment
+    Comment,
+    TradeBack
   ],
   synchronize: false,
   migrations: ["migration/*.ts"]
