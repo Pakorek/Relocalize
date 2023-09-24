@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType, registerEnumType } from "type-graphql";
 import {
   Entity,
   BaseEntity,
@@ -13,15 +13,18 @@ import {
   BeforeInsert,
   JoinColumn
 } from "typeorm";
-import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 import { Category } from "./Category";
 import { Place } from "./Place";
 import { Tag } from "./Tag";
-import { Upload } from "./Upload";
 import { Bookmark } from "./Bookmark";
 import { Image } from "./Image";
 import { TradeBack } from "./TradeBack";
+import { TradeType } from "./type/Trade";
 
+registerEnumType(TradeType, {
+  name: 'TradeType',
+});
 @ObjectType("Product")
 @InputType("ProductInput")
 @Entity()
@@ -62,23 +65,26 @@ export class Product extends BaseEntity {
 
   @Field()
   @Column({ type: "boolean" })
+  @IsBoolean()
   @IsOptional()
   is_trade?: boolean;
 
   @Field()
   @Column({ type: "boolean" })
+  @IsBoolean()
   @IsOptional()
   is_trade_open?: boolean;
 
   @Field()
   @Column({ type: "boolean" })
+  @IsBoolean()
   @IsOptional()
   is_service?: boolean;
 
-  @Field()
+  @Field(() => TradeType)
   @Column({ type: "varchar", length: 8 })
   @IsOptional()
-  trade_type?: string;
+  trade_type?: TradeType;
 
   @Field()
   @Column({ type: "varchar", length: 20 })
@@ -130,7 +136,7 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => TradeBack, (tb) => tb.trade, { onDelete: "CASCADE" })
   @Field(() => [TradeBack])
-  trades_backs?: TradeBack;
+  trades_back?: TradeBack[];
 
   // Automatic Dates
 

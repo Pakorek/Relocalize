@@ -49,6 +49,21 @@ export class ProductResolver {
     return product;
   }
 
+  @Query(() => [Product])
+  public async getTrades(): Promise<Product[]> {
+    const trades: Product[] | null = await this.productRepo.find({
+      where: { is_trade: true },
+      relations: { trades_back: true },
+    });
+
+    if (!trades) {
+      throw new Error(
+        "trades not found, sorry !"
+      );
+    }
+    return trades;
+  }
+
   @Mutation(() => Product)
   @Authorized()
   public async updateProduct(

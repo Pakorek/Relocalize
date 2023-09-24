@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from 'type-graphql';
+import { Field, InputType, ObjectType, registerEnumType } from "type-graphql";
 import {
   Entity,
   BaseEntity,
@@ -17,19 +17,14 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Product } from './Product';
 import { User } from './User';
 import { Category } from './Category';
-import { Upload } from './Upload';
 import { Tag } from './Tag';
 import { Bookmark } from './Bookmark';
 import { Image } from "./Image";
+import { PlaceTypeEnum } from "./type/Place";
 
-// export type BILLING_PLAN = 'FREE' | 'COMMISSION';
-export type PROFESSIONAL_AREA =
-  | 'ARTISAN'
-  | 'FARMER'
-  | 'MERCHANT'
-  | 'SERVICE PROVIDER'
-  | '...';
-
+registerEnumType(PlaceTypeEnum, {
+  name: 'PlaceTypeEnum',
+});
 @ObjectType('Place')
 @InputType('PlaceInput')
 @Entity()
@@ -43,10 +38,10 @@ export class Place extends BaseEntity {
   @IsNotEmpty({ message: 'The name is required' })
   name!: string;
 
-  @Field()
-  @Column({ type: 'varchar', length: 35 })
-  @IsNotEmpty({ message: 'The name is required' })
-  type!: string;
+  @Field(() => PlaceTypeEnum)
+  @Column({ type: 'int' })
+  @IsNotEmpty({ message: 'The type is required' })
+  type!: PlaceTypeEnum;
 
   @Field()
   @Column({ type: 'text' })
@@ -54,8 +49,7 @@ export class Place extends BaseEntity {
 
   @Field()
   @Column({ type: 'varchar', length: 4 })
-  @IsNotEmpty({ message: 'The name is required' })
-  since!: string;
+  since?: string;
 
   @Field()
   @Column({ type: 'varchar', length: 255, default: '' })

@@ -27,7 +27,7 @@ export class TradeBack extends BaseEntity {
   @Field()
   trade_id!: number;
 
-  @ManyToOne(() => Product, (product) => product.trades_backs)
+  @ManyToOne(() => Product, (product) => product.trades_back)
   @JoinColumn({ name: "trade_id", referencedColumnName: "id" })
   trade!: Product;
 }

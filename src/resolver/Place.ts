@@ -1,6 +1,7 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { Place } from '../entity/Place';
-import { dataSource } from '../data-source';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Place } from "../entity/Place";
+import { dataSource } from "../data-source";
+import { PlaceTypeEnum } from "../entity/type/Place";
 
 @Resolver(Place)
 export class PlaceResolver {
@@ -24,7 +25,7 @@ export class PlaceResolver {
   public async getProPlaces(): Promise<Place[] | void> {
     const places = await this.placeRepo.find({
       relations: { owner: true, category: true, tags: true },
-      where: { type: 'PROFESSIONAL' },
+      where: { type: PlaceTypeEnum.PROFESSIONAL },
     });
 
     if (!places) {
@@ -37,7 +38,7 @@ export class PlaceResolver {
   public async getAssoPlaces(): Promise<Place[] | void> {
     const places = await this.placeRepo.find({
       relations: { owner: true, category: true, tags: true },
-      where: { type: 'ASSOCIATION' },
+      where: { type: PlaceTypeEnum.ASSOCIATION },
     });
 
     if (!places) {
@@ -64,6 +65,15 @@ export class PlaceResolver {
       );
     }
     return place;
+  }
+
+  @Query(() => Place)
+  @Authorized()
+  public async getUserInventory(@Ctx() ctx): Promise<Place | null> {
+    return await this.placeRepo.findOne({
+      where: { owner_id: ctx.user.id, type: PlaceTypeEnum.INVENTORY },
+      relations: { products: true },
+    });
   }
 
   @Mutation(() => Place)
